@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -5,7 +7,6 @@ import java.util.Scanner;
  */
 public class Nova {
     private static final String DIVIDER = "____________________________________________________________";
-    private static final int MAX_TASKS = 100;
 
     /**
      * Greets the user, stores tasks, lists stored tasks, and exits when the user enters {@code bye}.
@@ -24,8 +25,7 @@ public class Nova {
         System.out.println(DIVIDER);
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        List<Task> tasks = new ArrayList<>();
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -39,17 +39,19 @@ public class Nova {
 
             try {
                 if (command.equals("list")) {
-                    listTasks(tasks, taskCount);
+                    listTasks(tasks);
                 } else if (isCommand(command, "mark")) {
-                    markTask(command, tasks, taskCount, true);
+                    markTask(command, tasks, true);
                 } else if (isCommand(command, "unmark")) {
-                    markTask(command, tasks, taskCount, false);
+                    markTask(command, tasks, false);
+                } else if (isCommand(command, "delete")) {
+                    deleteTask(command, tasks);
                 } else if (isCommand(command, "todo")) {
-                    taskCount = addTodo(command, tasks, taskCount);
+                    addTodo(command, tasks);
                 } else if (isCommand(command, "deadline")) {
-                    taskCount = addDeadline(command, tasks, taskCount);
+                    addDeadline(command, tasks);
                 } else if (isCommand(command, "event")) {
-                    taskCount = addEvent(command, tasks, taskCount);
+                    addEvent(command, tasks);
                 } else {
                     throw new NovaException("I'm sorry, but I don't know what that means :-(");
                 }
@@ -66,15 +68,15 @@ public class Nova {
     }
 
     /** Displays all stored tasks. */
-    private static void listTasks(Task[] tasks, int taskCount) {
+    private static void listTasks(List<Task> tasks) {
         System.out.println(" Here are the tasks in your list:");
-        for (int i = 0; i < taskCount; i++) {
-            System.out.println(" " + (i + 1) + "." + tasks[i]);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + tasks.get(i));
         }
     }
 
     /** Marks or unmarks the task selected by a command. */
-    private static void markTask(String command, Task[] tasks, int taskCount, boolean shouldMark)
+    private static void markTask(String command, List<Task> tasks, boolean shouldMark)
             throws NovaException {
         String commandWord = shouldMark ? "mark" : "unmark";
         String taskNumberText = command.substring(commandWord.length()).trim();
@@ -84,30 +86,51 @@ public class Nova {
         } catch (NumberFormatException exception) {
             throw new NovaException("Please enter a task number, for example: " + commandWord + " 1");
         }
-        if (taskIndex < 0 || taskIndex >= taskCount) {
+        if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new NovaException("Task " + (taskIndex + 1) + " does not exist in the list.");
         }
         if (shouldMark) {
-            tasks[taskIndex].markAsDone();
+            tasks.get(taskIndex).markAsDone();
             System.out.println(" Nice! I've marked this task as done:");
         } else {
-            tasks[taskIndex].markAsNotDone();
+            tasks.get(taskIndex).markAsNotDone();
             System.out.println(" OK, I've marked this task as not done yet:");
         }
-        System.out.println("  " + tasks[taskIndex]);
+        System.out.println("  " + tasks.get(taskIndex));
+    }
+
+    /** Deletes the task selected by a {@code delete NUMBER} command. */
+    private static void deleteTask(String command, List<Task> tasks) throws NovaException {
+        String taskNumberText = command.substring("delete".length()).trim();
+        int taskNumber;
+        try {
+            taskNumber = Integer.parseInt(taskNumberText);
+        } catch (NumberFormatException exception) {
+            throw new NovaException("Please enter a task number, for example: delete 1");
+        }
+
+        int taskIndex = taskNumber - 1;
+        if (taskIndex < 0 || taskIndex >= tasks.size()) {
+            throw new NovaException("Task " + taskNumber + " does not exist in the list.");
+        }
+
+        Task removedTask = tasks.remove(taskIndex);
+        System.out.println(" Noted. I've removed this task:");
+        System.out.println("  " + removedTask);
+        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
     }
 
     /** Adds a todo described by a {@code todo DESCRIPTION} command. */
-    private static int addTodo(String command, Task[] tasks, int taskCount) throws NovaException {
+    private static void addTodo(String command, List<Task> tasks) throws NovaException {
         String description = command.substring("todo".length()).trim();
         if (description.isEmpty()) {
             throw new NovaException("The description of a todo cannot be empty.");
         }
-        return storeTask(new Todo(description), tasks, taskCount);
+        storeTask(new Todo(description), tasks);
     }
 
     /** Adds a deadline described by a {@code deadline DESCRIPTION /by TIME} command. */
-    private static int addDeadline(String command, Task[] tasks, int taskCount) throws NovaException {
+    private static void addDeadline(String command, List<Task> tasks) throws NovaException {
         String details = command.substring("deadline".length()).trim();
         int byMarker = details.indexOf(" /by ");
         if (byMarker < 1 || byMarker + " /by ".length() >= details.length()) {
@@ -116,11 +139,11 @@ public class Nova {
 
         String description = details.substring(0, byMarker).trim();
         String by = details.substring(byMarker + " /by ".length()).trim();
-        return storeTask(new Deadline(description, by), tasks, taskCount);
+        storeTask(new Deadline(description, by), tasks);
     }
 
     /** Adds an event described by an {@code event DESCRIPTION /from START /to END} command. */
-    private static int addEvent(String command, Task[] tasks, int taskCount) throws NovaException {
+    private static void addEvent(String command, List<Task> tasks) throws NovaException {
         String details = command.substring("event".length()).trim();
         int fromMarker = details.indexOf(" /from ");
         int toMarker = details.indexOf(" /to ", fromMarker + 1);
@@ -137,19 +160,14 @@ public class Nova {
         if (from.isEmpty()) {
             throw new NovaException("An event needs a start date or time after /from.");
         }
-        return storeTask(new Event(description, from, to), tasks, taskCount);
+        storeTask(new Event(description, from, to), tasks);
     }
 
-    /** Stores and displays a task if there is room in the task list. */
-    private static int storeTask(Task task, Task[] tasks, int taskCount) throws NovaException {
-        if (taskCount >= tasks.length) {
-            throw new NovaException("The task list is full; no more tasks can be added.");
-        }
-        tasks[taskCount] = task;
+    /** Stores and displays a task in the dynamically sized task list. */
+    private static void storeTask(Task task, List<Task> tasks) {
+        tasks.add(task);
         System.out.println(" Got it. I've added this task:");
         System.out.println("  " + task);
-        int newTaskCount = taskCount + 1;
-        System.out.println(" Now you have " + newTaskCount + " tasks in the list.");
-        return newTaskCount;
+        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
     }
 }
