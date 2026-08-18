@@ -90,7 +90,7 @@ public class Nova {
             System.out.println(" A todo needs a description.");
             return taskCount;
         }
-        return storeTask(Task.todo(description), tasks, taskCount);
+        return storeTask(new Todo(description), tasks, taskCount);
     }
 
     /** Adds a deadline described by a {@code deadline DESCRIPTION /by TIME} command. */
@@ -104,7 +104,7 @@ public class Nova {
 
         String description = details.substring(0, byMarker).trim();
         String by = details.substring(byMarker + " /by ".length()).trim();
-        return storeTask(Task.deadline(description, by), tasks, taskCount);
+        return storeTask(new Deadline(description, by), tasks, taskCount);
     }
 
     /** Adds an event described by an {@code event DESCRIPTION /from START /to END} command. */
@@ -127,7 +127,7 @@ public class Nova {
             System.out.println(" Use: event DESCRIPTION /from START /to END");
             return taskCount;
         }
-        return storeTask(Task.event(description, from, to), tasks, taskCount);
+        return storeTask(new Event(description, from, to), tasks, taskCount);
     }
 
     /** Stores and displays a task if there is room in the task list. */
@@ -139,6 +139,8 @@ public class Nova {
         tasks[taskCount] = task;
         System.out.println(" Got it. I've added this task:");
         System.out.println("  " + task);
-        return taskCount + 1;
+        int newTaskCount = taskCount + 1;
+        System.out.println(" Now you have " + newTaskCount + " tasks in the list.");
+        return newTaskCount;
     }
 }
