@@ -25,6 +25,7 @@ public class Nova {
 
         Scanner scanner = new Scanner(System.in);
         String[] tasks = new String[MAX_TASKS];
+        boolean[] isDone = new boolean[MAX_TASKS];
         int taskCount = 0;
 
         while (scanner.hasNextLine()) {
@@ -39,7 +40,22 @@ public class Nova {
 
             if (command.equals("list")) {
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println(" " + (i + 1) + ". " + tasks[i]);
+                    String statusIcon = isDone[i] ? "X" : " ";
+                    System.out.println(" " + (i + 1) + ".[" + statusIcon + "] " + tasks[i]);
+                }
+            } else if (command.startsWith("mark ")) {
+                String taskNumberText = command.substring("mark ".length()).trim();
+                try {
+                    int taskIndex = Integer.parseInt(taskNumberText) - 1;
+                    if (taskIndex < 0 || taskIndex >= taskCount) {
+                        System.out.println(" Please enter the number of an existing task.");
+                    } else {
+                        isDone[taskIndex] = true;
+                        System.out.println(" Nice! I've marked this task as done:");
+                        System.out.println("  [X] " + tasks[taskIndex]);
+                    }
+                } catch (NumberFormatException exception) {
+                    System.out.println(" Please enter a task number after mark, for example: mark 1");
                 }
             } else {
                 tasks[taskCount] = command;
