@@ -5,9 +5,10 @@ import java.util.Scanner;
  */
 public class Nova {
     private static final String DIVIDER = "____________________________________________________________";
+    private static final int MAX_TASKS = 100;
 
     /**
-     * Greets the user, echoes commands, and exits when the user enters {@code bye}.
+     * Greets the user, stores tasks, lists stored tasks, and exits when the user enters {@code bye}.
      *
      * @param args command-line arguments; not used
      */
@@ -23,6 +24,9 @@ public class Nova {
         System.out.println(DIVIDER);
 
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[MAX_TASKS];
+        int taskCount = 0;
+
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
 
@@ -33,7 +37,15 @@ public class Nova {
                 break;
             }
 
-            System.out.println(" " + command);
+            if (command.equals("list")) {
+                for (int i = 0; i < taskCount; i++) {
+                    System.out.println(" " + (i + 1) + ". " + tasks[i]);
+                }
+            } else {
+                tasks[taskCount] = command;
+                taskCount++;
+                System.out.println(" added: " + command);
+            }
             System.out.println(DIVIDER);
         }
     }
