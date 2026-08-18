@@ -35,6 +35,8 @@ After every update to source code:
 1. Review `test/ui-test-plan.md` and update it when the changed or newly added behavior is not adequately covered. Each added test case must state its aim, inputs, and exact expected output.
 2. Invoke the project-specific `$test-ui` skill and run the UI test plan. Do not consider the code update complete until the test session passes, or until a failure has been reported to the user with the actual and expected outputs.
 
+When adding a feature or command, identify its invalid-input and failure cases, implement clear error handling for them, and add corresponding negative test cases to `test/ui-test-plan.md` as needed. Negative tests must verify both the error message and that the chatbot remains in a valid state afterward.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
