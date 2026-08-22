@@ -294,3 +294,80 @@ ____________________________________________________________
  Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## TC6: Find deadlines occurring on a date
+
+Aim: Verify the on command lists only deadlines due on a valid date, reports invalid dates, and leaves the task list unchanged.
+
+### Input
+
+```text
+deadline submit report /by 2019-10-15
+todo buy stationery
+deadline return book /by 2019-10-15
+deadline renew membership /by 2019-10-16
+on 2019-10-15
+on 2019-10-17
+on 2019-02-30
+on
+list
+bye
+```
+
+### Expected output
+
+```text
+ _   _                  
+| \ | | _____   ____ _ 
+|  \| |/ _ \ \ / / _` |
+| |\  | (_) \ V / (_| |
+|_| \_|\___/ \_/ \__,_|
+
+Hello! I'm Nova.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [D][ ] submit report (by: Oct 15 2019)
+ Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [T][ ] buy stationery
+ Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [D][ ] return book (by: Oct 15 2019)
+ Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [D][ ] renew membership (by: Oct 16 2019)
+ Now you have 4 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Here are the deadlines on 2019-10-15:
+ 1.[D][ ] submit report (by: Oct 15 2019)
+ 3.[D][ ] return book (by: Oct 15 2019)
+____________________________________________________________
+____________________________________________________________
+ Here are the deadlines on 2019-10-17:
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! The date must be a valid date in yyyy-MM-dd format.
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! The date must be a valid date in yyyy-MM-dd format.
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list:
+ 1.[D][ ] submit report (by: Oct 15 2019)
+ 2.[T][ ] buy stationery
+ 3.[D][ ] return book (by: Oct 15 2019)
+ 4.[D][ ] renew membership (by: Oct 16 2019)
+____________________________________________________________
+____________________________________________________________
+ Bye. Hope to see you again soon!
+____________________________________________________________
+```

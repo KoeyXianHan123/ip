@@ -21,6 +21,16 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /**
+     * Returns whether this deadline falls on the given date.
+     *
+     * @param date date to compare with this deadline
+     * @return {@code true} if this deadline falls on the date
+     */
+    public boolean isDueOn(LocalDate date) {
+        return by.equals(date);
+    }
+
     @Override
     public String toDataString() {
         return "V2 | D | " + getDataStatus() + " | " + encodeDataField(description)
