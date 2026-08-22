@@ -48,7 +48,6 @@ public class Ui {
     /** Displays Nova's farewell. */
     public void showGoodbye() {
         System.out.println(" Bye. Hope to see you again soon!");
-        showDivider();
     }
 
     /** Displays an error message. */

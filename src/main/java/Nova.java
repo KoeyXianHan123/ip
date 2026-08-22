@@ -50,55 +50,21 @@ public class Nova {
 
         while (ui.hasNextCommand()) {
             ui.showDivider();
+            boolean isExit = false;
             try {
-                Parser.ParsedCommand command = parser.parse(ui.readCommand());
-                if (command.getType() == Parser.CommandType.BYE) {
-                    ui.showGoodbye();
-                    break;
-                }
-                executeCommand(command, tasks);
+                Command command = parser.parse(ui.readCommand());
+                command.execute(tasks, ui);
+                isExit = command.isExit();
             } catch (NovaException exception) {
                 ui.showError(exception.getMessage());
             } catch (IOException exception) {
                 ui.showError("I could not save your tasks to the data file.");
+            } finally {
+                ui.showDivider();
             }
-            ui.showDivider();
-        }
-    }
-
-    /** Executes a parsed command. */
-    private void executeCommand(Parser.ParsedCommand command, TaskList tasks)
-            throws NovaException, IOException {
-        switch (command.getType()) {
-            case LIST:
-                ui.showTasks(tasks.getTasks());
+            if (isExit) {
                 break;
-            case MARK:
-                Task markedTask = tasks.setMarked(command.getTaskNumber(), true);
-                ui.showMarkedTask(markedTask, true);
-                break;
-            case UNMARK:
-                Task unmarkedTask = tasks.setMarked(command.getTaskNumber(), false);
-                ui.showMarkedTask(unmarkedTask, false);
-                break;
-            case DELETE:
-                Task deletedTask = tasks.delete(command.getTaskNumber());
-                ui.showDeletedTask(deletedTask, tasks.size());
-                break;
-            case ADD:
-                tasks.add(command.getTask());
-                ui.showAddedTask(command.getTask(), tasks.size());
-                break;
-            case SHOW_ON_DATE:
-                ui.showDeadlinesOn(command.getDate());
-                for (TaskList.NumberedTask task : tasks.getDeadlinesOn(command.getDate())) {
-                    ui.showNumberedTask(task.getTaskNumber(), task.getTask());
-                }
-                break;
-            case BYE:
-                break;
-            default:
-                throw new AssertionError("Unhandled command type: " + command.getType());
+            }
         }
     }
 }

@@ -5,42 +5,6 @@ import java.time.format.DateTimeParseException;
  * Interprets user input as commands that Nova can execute.
  */
 public class Parser {
-    /** Represents the supported kinds of commands. */
-    enum CommandType {
-        BYE, LIST, MARK, UNMARK, DELETE, ADD, SHOW_ON_DATE
-    }
-
-    /** Holds a parsed command and any argument needed to execute it. */
-    static class ParsedCommand {
-        private final CommandType type;
-        private final Task task;
-        private final int taskNumber;
-        private final LocalDate date;
-
-        private ParsedCommand(CommandType type, Task task, int taskNumber, LocalDate date) {
-            this.type = type;
-            this.task = task;
-            this.taskNumber = taskNumber;
-            this.date = date;
-        }
-
-        CommandType getType() {
-            return type;
-        }
-
-        Task getTask() {
-            return task;
-        }
-
-        int getTaskNumber() {
-            return taskNumber;
-        }
-
-        LocalDate getDate() {
-            return date;
-        }
-    }
-
     /**
      * Parses user input into a command and validates its arguments.
      *
@@ -48,17 +12,17 @@ public class Parser {
      * @return parsed command
      * @throws NovaException if the command or its arguments are invalid
      */
-    public ParsedCommand parse(String input) throws NovaException {
+    public Command parse(String input) throws NovaException {
         if (input.equals("bye")) {
-            return commandOfType(CommandType.BYE);
+            return new ExitCommand();
         } else if (input.equals("list")) {
-            return commandOfType(CommandType.LIST);
+            return new ListCommand();
         } else if (isCommand(input, "mark")) {
-            return parseNumberedCommand(input, "mark", CommandType.MARK);
+            return new MarkCommand(parseTaskNumber(input, "mark"), true);
         } else if (isCommand(input, "unmark")) {
-            return parseNumberedCommand(input, "unmark", CommandType.UNMARK);
+            return new MarkCommand(parseTaskNumber(input, "unmark"), false);
         } else if (isCommand(input, "delete")) {
-            return parseNumberedCommand(input, "delete", CommandType.DELETE);
+            return new DeleteCommand(parseTaskNumber(input, "delete"));
         } else if (isCommand(input, "todo")) {
             return parseTodo(input);
         } else if (isCommand(input, "deadline")) {
@@ -76,34 +40,27 @@ public class Parser {
         return input.equals(commandWord) || input.startsWith(commandWord + " ");
     }
 
-    /** Returns a command that does not have an argument. */
-    private ParsedCommand commandOfType(CommandType type) {
-        return new ParsedCommand(type, null, 0, null);
-    }
-
-    /** Returns a command containing a task-list number. */
-    private ParsedCommand parseNumberedCommand(String input, String commandWord, CommandType type)
-            throws NovaException {
+    /** Returns the task-list number in a numbered command. */
+    private int parseTaskNumber(String input, String commandWord) throws NovaException {
         String taskNumberText = input.substring(commandWord.length()).trim();
         try {
-            int taskNumber = Integer.parseInt(taskNumberText);
-            return new ParsedCommand(type, null, taskNumber, null);
+            return Integer.parseInt(taskNumberText);
         } catch (NumberFormatException exception) {
             throw new NovaException("Please enter a task number, for example: " + commandWord + " 1");
         }
     }
 
     /** Returns an add command containing a todo. */
-    private ParsedCommand parseTodo(String input) throws NovaException {
+    private Command parseTodo(String input) throws NovaException {
         String description = input.substring("todo".length()).trim();
         if (description.isEmpty()) {
             throw new NovaException("The description of a todo cannot be empty.");
         }
-        return addCommand(new Todo(description));
+        return new AddCommand(new Todo(description));
     }
 
     /** Returns an add command containing a deadline. */
-    private ParsedCommand parseDeadline(String input) throws NovaException {
+    private Command parseDeadline(String input) throws NovaException {
         String details = input.substring("deadline".length()).trim();
         int byMarker = details.indexOf(" /by ");
         if (byMarker < 1 || byMarker + " /by ".length() >= details.length()) {
@@ -113,14 +70,14 @@ public class Parser {
         String description = details.substring(0, byMarker).trim();
         String byText = details.substring(byMarker + " /by ".length()).trim();
         try {
-            return addCommand(new Deadline(description, LocalDate.parse(byText)));
+            return new AddCommand(new Deadline(description, LocalDate.parse(byText)));
         } catch (DateTimeParseException exception) {
             throw new NovaException("The deadline date must be a valid date in yyyy-MM-dd format.");
         }
     }
 
     /** Returns an add command containing an event. */
-    private ParsedCommand parseEvent(String input) throws NovaException {
+    private Command parseEvent(String input) throws NovaException {
         String details = input.substring("event".length()).trim();
         int fromMarker = details.indexOf(" /from ");
         int toMarker = details.indexOf(" /to ", fromMarker + 1);
@@ -137,22 +94,18 @@ public class Parser {
         if (from.isEmpty()) {
             throw new NovaException("An event needs a start date or time after /from.");
         }
-        return addCommand(new Event(description, from, to));
+        return new AddCommand(new Event(description, from, to));
     }
 
     /** Returns a command that searches for deadlines on a date. */
-    private ParsedCommand parseDateSearch(String input) throws NovaException {
+    private Command parseDateSearch(String input) throws NovaException {
         String dateText = input.substring("on".length()).trim();
         try {
             LocalDate date = LocalDate.parse(dateText);
-            return new ParsedCommand(CommandType.SHOW_ON_DATE, null, 0, date);
+            return new ShowOnDateCommand(date);
         } catch (DateTimeParseException exception) {
             throw new NovaException("The date must be a valid date in yyyy-MM-dd format.");
         }
     }
 
-    /** Returns an add command containing the given task. */
-    private ParsedCommand addCommand(Task task) {
-        return new ParsedCommand(CommandType.ADD, task, 0, null);
-    }
 }
