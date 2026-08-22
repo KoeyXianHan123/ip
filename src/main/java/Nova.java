@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -65,6 +67,8 @@ public class Nova {
                     addDeadline(command, tasks);
                 } else if (isCommand(command, "event")) {
                     addEvent(command, tasks);
+                } else if (isCommand(command, "on")) {
+                    showDeadlinesOn(command, tasks);
                 } else {
                     throw new NovaException("I'm sorry, but I don't know what that means :-(");
                 }
@@ -165,17 +169,21 @@ public class Nova {
         storeTask(new Todo(description), tasks);
     }
 
-    /** Adds a deadline described by a {@code deadline DESCRIPTION /by TIME} command. */
+    /** Adds a deadline described by a {@code deadline DESCRIPTION /by yyyy-MM-dd} command. */
     private static void addDeadline(String command, List<Task> tasks) throws NovaException, IOException {
         String details = command.substring("deadline".length()).trim();
         int byMarker = details.indexOf(" /by ");
         if (byMarker < 1 || byMarker + " /by ".length() >= details.length()) {
-            throw new NovaException("A deadline must follow: deadline DESCRIPTION /by DATE_OR_TIME");
+            throw new NovaException("A deadline must follow: deadline DESCRIPTION /by yyyy-MM-dd");
         }
 
         String description = details.substring(0, byMarker).trim();
-        String by = details.substring(byMarker + " /by ".length()).trim();
-        storeTask(new Deadline(description, by), tasks);
+        String byText = details.substring(byMarker + " /by ".length()).trim();
+        try {
+            storeTask(new Deadline(description, LocalDate.parse(byText)), tasks);
+        } catch (DateTimeParseException exception) {
+            throw new NovaException("The deadline date must be a valid date in yyyy-MM-dd format.");
+        }
     }
 
     /** Adds an event described by an {@code event DESCRIPTION /from START /to END} command. */
@@ -197,6 +205,25 @@ public class Nova {
             throw new NovaException("An event needs a start date or time after /from.");
         }
         storeTask(new Event(description, from, to), tasks);
+    }
+
+    /** Displays deadlines that fall on the date in an {@code on yyyy-MM-dd} command. */
+    private static void showDeadlinesOn(String command, List<Task> tasks) throws NovaException {
+        String dateText = command.substring("on".length()).trim();
+        LocalDate date;
+        try {
+            date = LocalDate.parse(dateText);
+        } catch (DateTimeParseException exception) {
+            throw new NovaException("The date must be a valid date in yyyy-MM-dd format.");
+        }
+
+        System.out.println(" Here are the deadlines on " + date + ":");
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (task instanceof Deadline deadline && deadline.isDueOn(date)) {
+                System.out.println(" " + (i + 1) + "." + task);
+            }
+        }
     }
 
     /** Stores and displays a task in the dynamically sized task list. */

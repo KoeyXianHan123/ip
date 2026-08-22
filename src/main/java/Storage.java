@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -91,7 +93,7 @@ public class Storage {
                 return parseVersionTwoTask(fields);
             }
             return parseLegacyTask(fields);
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException | DateTimeException exception) {
             return null;
         }
     }
@@ -127,7 +129,7 @@ public class Storage {
             case "D":
                 task = fields.length == textStart + 2
                         && hasText(fields[textStart]) && hasText(fields[textStart + 1])
-                        ? new Deadline(fields[textStart], fields[textStart + 1]) : null;
+                        ? new Deadline(fields[textStart], LocalDate.parse(fields[textStart + 1])) : null;
                 break;
             case "E":
                 task = fields.length == textStart + 3
