@@ -13,7 +13,7 @@ public class Todo extends Task {
 
     @Override
     public String toDataString() {
-        return "T | " + getDataStatus() + " | " + description;
+        return "V2 | T | " + getDataStatus() + " | " + encodeDataField(description);
     }
 
     @Override

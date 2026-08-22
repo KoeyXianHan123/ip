@@ -234,15 +234,20 @@ ____________________________________________________________
 
 ## TC5: Load saved tasks and skip corrupted records
 
-Aim: Verify startup restores every valid task type and completion state while safely ignoring a malformed record.
+Aim: Verify startup restores encoded and legacy tasks, including delimiter and Unicode text, while safely ignoring malformed records.
 
 ### Initial data file
 
 ```text
-T | 1 | read book
-D | 0 | return book | June 6th
+V2 | T | 1 | cmVhZCB8IGNhZsOp
+V2 | D | 0 | cmV0dXJuIGJvb2s= | SnVuZSB8IDZ0aA==
+V2 | E | 0 | cHJvamVjdCBtZWV0aW5n | QXVnIDZ0aCAycG0= | NHBt
+T | 0 | legacy task
+V2 | T | 2 | aW52YWxpZCBzdGF0dXM=
+V2 | T | 0 | not_base64!
+V2 | D | 0 | ZGVhZGxpbmU= |
+V2 | X | 0 | dW5rbm93biB0eXBl
 corrupted task data
-E | 0 | project meeting | Aug 6th 2pm | 4pm
 ```
 
 ### Input
@@ -264,11 +269,13 @@ bye
 Hello! I'm Nova.
 What can I do for you?
 ____________________________________________________________
+ OOPS!!! I skipped 5 corrupted task record(s) in the data file.
 ____________________________________________________________
  Here are the tasks in your list:
- 1.[T][X] read book
- 2.[D][ ] return book (by: June 6th)
+ 1.[T][X] read | café
+ 2.[D][ ] return book (by: June | 6th)
  3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+ 4.[T][ ] legacy task
 ____________________________________________________________
 ____________________________________________________________
  Bye. Hope to see you again soon!

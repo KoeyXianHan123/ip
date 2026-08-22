@@ -31,6 +31,10 @@ public class Nova {
         List<Task> tasks;
         try {
             tasks = STORAGE.load();
+            if (STORAGE.getSkippedRecordCount() > 0) {
+                System.out.println(" OOPS!!! I skipped " + STORAGE.getSkippedRecordCount()
+                        + " corrupted task record(s) in the data file.");
+            }
         } catch (IOException exception) {
             System.out.println(" OOPS!!! I could not load your tasks from the data file.");
             tasks = new ArrayList<>();
@@ -100,15 +104,29 @@ public class Nova {
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new NovaException("Task " + (taskIndex + 1) + " does not exist in the list.");
         }
+        Task task = tasks.get(taskIndex);
+        boolean wasDone = task.isDone();
         if (shouldMark) {
-            tasks.get(taskIndex).markAsDone();
+            task.markAsDone();
+        } else {
+            task.markAsNotDone();
+        }
+        try {
+            STORAGE.save(tasks);
+        } catch (IOException exception) {
+            if (wasDone) {
+                task.markAsDone();
+            } else {
+                task.markAsNotDone();
+            }
+            throw exception;
+        }
+        if (shouldMark) {
             System.out.println(" Nice! I've marked this task as done:");
         } else {
-            tasks.get(taskIndex).markAsNotDone();
             System.out.println(" OK, I've marked this task as not done yet:");
         }
-        STORAGE.save(tasks);
-        System.out.println("  " + tasks.get(taskIndex));
+        System.out.println("  " + task);
     }
 
     /** Deletes the task selected by a {@code delete NUMBER} command. */
@@ -127,7 +145,12 @@ public class Nova {
         }
 
         Task removedTask = tasks.remove(taskIndex);
-        STORAGE.save(tasks);
+        try {
+            STORAGE.save(tasks);
+        } catch (IOException exception) {
+            tasks.add(taskIndex, removedTask);
+            throw exception;
+        }
         System.out.println(" Noted. I've removed this task:");
         System.out.println("  " + removedTask);
         System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
@@ -179,7 +202,12 @@ public class Nova {
     /** Stores and displays a task in the dynamically sized task list. */
     private static void storeTask(Task task, List<Task> tasks) throws IOException {
         tasks.add(task);
-        STORAGE.save(tasks);
+        try {
+            STORAGE.save(tasks);
+        } catch (IOException exception) {
+            tasks.remove(tasks.size() - 1);
+            throw exception;
+        }
         System.out.println(" Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println(" Now you have " + tasks.size() + " tasks in the list.");

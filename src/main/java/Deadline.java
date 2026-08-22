@@ -17,7 +17,8 @@ public class Deadline extends Task {
 
     @Override
     public String toDataString() {
-        return "D | " + getDataStatus() + " | " + description + " | " + by;
+        return "V2 | D | " + getDataStatus() + " | " + encodeDataField(description)
+                + " | " + encodeDataField(by);
     }
 
     @Override

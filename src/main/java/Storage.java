@@ -1,8 +1,12 @@
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -10,6 +14,7 @@ import java.util.List;
  */
 public class Storage {
     private final Path filePath;
+    private int skippedRecordCount;
 
     /**
      * Creates storage that writes tasks to the given path.
@@ -29,17 +34,29 @@ public class Storage {
      */
     public List<Task> load() throws IOException {
         List<Task> tasks = new ArrayList<>();
+        skippedRecordCount = 0;
         if (!Files.exists(filePath)) {
             return tasks;
         }
 
-        for (String line : Files.readAllLines(filePath, StandardCharsets.UTF_8)) {
-            Task task = parseTask(line);
-            if (task != null) {
-                tasks.add(task);
+        try {
+            for (String line : Files.readAllLines(filePath, StandardCharsets.UTF_8)) {
+                Task task = parseTask(line);
+                if (task != null) {
+                    tasks.add(task);
+                } else {
+                    skippedRecordCount++;
+                }
             }
+        } catch (NoSuchFileException exception) {
+            return tasks;
         }
         return tasks;
+    }
+
+    /** Returns the number of malformed records skipped by the most recent load. */
+    public int getSkippedRecordCount() {
+        return skippedRecordCount;
     }
 
     /**
@@ -50,48 +67,108 @@ public class Storage {
      * @throws IOException if the tasks cannot be written
      */
     public void save(List<Task> tasks) throws IOException {
-        Path parentDirectory = filePath.getParent();
-        if (parentDirectory != null) {
-            Files.createDirectories(parentDirectory);
-        }
+        Path absoluteFilePath = filePath.toAbsolutePath();
+        Path parentDirectory = absoluteFilePath.getParent();
+        Files.createDirectories(parentDirectory);
 
         List<String> taskLines = tasks.stream()
                 .map(Task::toDataString)
                 .toList();
-        Files.write(filePath, taskLines, StandardCharsets.UTF_8);
+        Path temporaryFile = Files.createTempFile(parentDirectory, "nova-", ".tmp");
+        try {
+            Files.write(temporaryFile, taskLines, StandardCharsets.UTF_8);
+            replaceDataFile(temporaryFile, absoluteFilePath);
+        } finally {
+            Files.deleteIfExists(temporaryFile);
+        }
     }
 
     /** Returns the task represented by a data-file record, or {@code null} if it is malformed. */
     private Task parseTask(String line) {
         String[] fields = line.split(" \\| ", -1);
-        if (!hasValidStatus(fields)) {
+        try {
+            if (fields.length > 0 && fields[0].equals("V2")) {
+                return parseVersionTwoTask(fields);
+            }
+            return parseLegacyTask(fields);
+        } catch (IllegalArgumentException exception) {
             return null;
         }
+    }
 
+    /** Returns a task from the original plain-text format, or {@code null} if invalid. */
+    private Task parseLegacyTask(String[] fields) {
+        if (fields.length < 2 || !hasValidStatus(fields[1])) {
+            return null;
+        }
+        return createTask(fields[0], fields[1], fields, 2);
+    }
+
+    /** Returns a task from the version-two encoded format, or {@code null} if invalid. */
+    private Task parseVersionTwoTask(String[] fields) {
+        if (fields.length < 3 || !hasValidStatus(fields[2])) {
+            return null;
+        }
+        String[] decodedFields = fields.clone();
+        for (int i = 3; i < decodedFields.length; i++) {
+            decodedFields[i] = decodeDataField(decodedFields[i]);
+        }
+        return createTask(decodedFields[1], decodedFields[2], decodedFields, 3);
+    }
+
+    /** Returns a task built from validated fields, or {@code null} if the record shape is invalid. */
+    private Task createTask(String type, String status, String[] fields, int textStart) {
         Task task;
-        switch (fields[0]) {
+        switch (type) {
             case "T":
-                task = fields.length == 3 ? new Todo(fields[2]) : null;
+                task = fields.length == textStart + 1 && hasText(fields[textStart])
+                        ? new Todo(fields[textStart]) : null;
                 break;
             case "D":
-                task = fields.length == 4 ? new Deadline(fields[2], fields[3]) : null;
+                task = fields.length == textStart + 2
+                        && hasText(fields[textStart]) && hasText(fields[textStart + 1])
+                        ? new Deadline(fields[textStart], fields[textStart + 1]) : null;
                 break;
             case "E":
-                task = fields.length == 5 ? new Event(fields[2], fields[3], fields[4]) : null;
+                task = fields.length == textStart + 3
+                        && hasText(fields[textStart]) && hasText(fields[textStart + 1])
+                        && hasText(fields[textStart + 2])
+                        ? new Event(fields[textStart], fields[textStart + 1], fields[textStart + 2]) : null;
                 break;
             default:
                 task = null;
                 break;
         }
 
-        if (task != null && fields[1].equals("1")) {
+        if (task != null && status.equals("1")) {
             task.markAsDone();
         }
         return task;
     }
 
-    /** Returns whether a record has a supported completion-state field. */
-    private boolean hasValidStatus(String[] fields) {
-        return fields.length >= 2 && (fields[1].equals("0") || fields[1].equals("1"));
+    /** Returns a decoded version-two text field. */
+    private String decodeDataField(String value) {
+        byte[] decodedBytes = Base64.getDecoder().decode(value);
+        return new String(decodedBytes, StandardCharsets.UTF_8);
+    }
+
+    /** Returns whether a record has a supported completion state. */
+    private boolean hasValidStatus(String status) {
+        return status.equals("0") || status.equals("1");
+    }
+
+    /** Returns whether a required task text field contains non-whitespace characters. */
+    private boolean hasText(String value) {
+        return !value.isBlank();
+    }
+
+    /** Atomically replaces the data file when the file system supports atomic moves. */
+    private void replaceDataFile(Path temporaryFile, Path destination) throws IOException {
+        try {
+            Files.move(temporaryFile, destination, StandardCopyOption.ATOMIC_MOVE,
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException exception) {
+            Files.move(temporaryFile, destination, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 }

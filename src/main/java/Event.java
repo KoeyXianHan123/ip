@@ -20,7 +20,8 @@ public class Event extends Task {
 
     @Override
     public String toDataString() {
-        return "E | " + getDataStatus() + " | " + description + " | " + from + " | " + to;
+        return "V2 | E | " + getDataStatus() + " | " + encodeDataField(description)
+                + " | " + encodeDataField(from) + " | " + encodeDataField(to);
     }
 
     @Override
