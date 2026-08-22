@@ -11,7 +11,7 @@ description: Run Nova console UI regression tests defined in test/ui-test-plan.m
 4. Show the runner's console transcript, including input and actual output.
 5. Stop on the first failure and report the complete expected and actual outputs. Do not run later cases.
 
-The runner requires Java 25, compiles `src/main/java/*.java` into a temporary directory, and starts a fresh Nova process for each test case.
+The runner requires Java 25, compiles Java files recursively from `src/main/java` into a temporary directory, and starts a fresh Nova process for each test case.
 
 ## Plan format
 

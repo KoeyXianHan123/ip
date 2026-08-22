@@ -1,4 +1,11 @@
+package nova.command;
+
 import java.io.IOException;
+
+import nova.exception.NovaException;
+import nova.task.Task;
+import nova.task.TaskList;
+import nova.ui.Ui;
 
 /**
  * Deletes a numbered task from the task list.

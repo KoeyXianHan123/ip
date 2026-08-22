@@ -1,3 +1,5 @@
+package nova.storage;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
@@ -10,6 +12,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+
+import nova.task.Deadline;
+import nova.task.Event;
+import nova.task.Task;
+import nova.task.Todo;
 
 /**
  * Saves Nova's task list to a file on the hard disk.

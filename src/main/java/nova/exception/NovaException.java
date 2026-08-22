@@ -1,3 +1,5 @@
+package nova.exception;
+
 /**
  * Represents an error caused by an invalid command given to Nova.
  */
