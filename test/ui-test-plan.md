@@ -1,6 +1,6 @@
 # Nova UI Test Plan
 
-Run cases in order with Java 25. Each case starts Nova in a fresh process.
+Run cases in order with Java 25. Each case starts Nova in a fresh process and temporary working directory.
 
 ## TC1: Add and list all task types
 
@@ -226,6 +226,49 @@ ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list:
  1.[T][ ] write tests
+____________________________________________________________
+____________________________________________________________
+ Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC5: Load saved tasks and skip corrupted records
+
+Aim: Verify startup restores every valid task type and completion state while safely ignoring a malformed record.
+
+### Initial data file
+
+```text
+T | 1 | read book
+D | 0 | return book | June 6th
+corrupted task data
+E | 0 | project meeting | Aug 6th 2pm | 4pm
+```
+
+### Input
+
+```text
+list
+bye
+```
+
+### Expected output
+
+```text
+ _   _                  
+| \ | | _____   ____ _ 
+|  \| |/ _ \ \ / / _` |
+| |\  | (_) \ V / (_| |
+|_| \_|\___/ \_/ \__,_|
+
+Hello! I'm Nova.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list:
+ 1.[T][X] read book
+ 2.[D][ ] return book (by: June 6th)
+ 3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
  Bye. Hope to see you again soon!

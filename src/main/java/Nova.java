@@ -28,7 +28,13 @@ public class Nova {
         System.out.println(DIVIDER);
 
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
+        List<Task> tasks;
+        try {
+            tasks = STORAGE.load();
+        } catch (IOException exception) {
+            System.out.println(" OOPS!!! I could not load your tasks from the data file.");
+            tasks = new ArrayList<>();
+        }
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
