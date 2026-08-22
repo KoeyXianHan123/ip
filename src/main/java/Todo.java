@@ -12,6 +12,11 @@ public class Todo extends Task {
     }
 
     @Override
+    public String toDataString() {
+        return "T | " + getDataStatus() + " | " + description;
+    }
+
+    @Override
     public String toString() {
         return "[T]" + super.toString();
     }

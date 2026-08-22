@@ -38,6 +38,20 @@ public class Task {
         isDone = false;
     }
 
+    /** Returns this task's completion state in the data-file format. */
+    protected String getDataStatus() {
+        return isDone ? "1" : "0";
+    }
+
+    /**
+     * Returns this task in the format used by the data file.
+     *
+     * @return serialized task
+     */
+    public String toDataString() {
+        return "T | " + getDataStatus() + " | " + description;
+    }
+
     /**
      * Returns the task in its display format, including its status icon.
      *

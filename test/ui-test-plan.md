@@ -183,3 +183,51 @@ ____________________________________________________________
  Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## TC4: Save after completion-state changes
+
+Aim: Verify successful mark and unmark commands remain usable when each task-list change is saved to disk.
+
+### Input
+
+```text
+todo write tests
+mark 1
+unmark 1
+list
+bye
+```
+
+### Expected output
+
+```text
+ _   _                  
+| \ | | _____   ____ _ 
+|  \| |/ _ \ \ / / _` |
+| |\  | (_) \ V / (_| |
+|_| \_|\___/ \_/ \__,_|
+
+Hello! I'm Nova.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [T][ ] write tests
+ Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Nice! I've marked this task as done:
+  [T][X] write tests
+____________________________________________________________
+____________________________________________________________
+ OK, I've marked this task as not done yet:
+  [T][ ] write tests
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list:
+ 1.[T][ ] write tests
+____________________________________________________________
+____________________________________________________________
+ Bye. Hope to see you again soon!
+____________________________________________________________
+```

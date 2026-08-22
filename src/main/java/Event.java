@@ -19,6 +19,11 @@ public class Event extends Task {
     }
 
     @Override
+    public String toDataString() {
+        return "E | " + getDataStatus() + " | " + description + " | " + from + " | " + to;
+    }
+
+    @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }

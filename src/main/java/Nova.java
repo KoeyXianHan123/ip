@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -7,6 +9,7 @@ import java.util.Scanner;
  */
 public class Nova {
     private static final String DIVIDER = "____________________________________________________________";
+    private static final Storage STORAGE = new Storage(Path.of("data", "nova.txt"));
 
     /**
      * Greets the user, stores tasks, lists stored tasks, and exits when the user enters {@code bye}.
@@ -57,6 +60,8 @@ public class Nova {
                 }
             } catch (NovaException exception) {
                 System.out.println(" OOPS!!! " + exception.getMessage());
+            } catch (IOException exception) {
+                System.out.println(" OOPS!!! I could not save your tasks to the data file.");
             }
             System.out.println(DIVIDER);
         }
@@ -77,7 +82,7 @@ public class Nova {
 
     /** Marks or unmarks the task selected by a command. */
     private static void markTask(String command, List<Task> tasks, boolean shouldMark)
-            throws NovaException {
+            throws NovaException, IOException {
         String commandWord = shouldMark ? "mark" : "unmark";
         String taskNumberText = command.substring(commandWord.length()).trim();
         int taskIndex;
@@ -96,11 +101,12 @@ public class Nova {
             tasks.get(taskIndex).markAsNotDone();
             System.out.println(" OK, I've marked this task as not done yet:");
         }
+        STORAGE.save(tasks);
         System.out.println("  " + tasks.get(taskIndex));
     }
 
     /** Deletes the task selected by a {@code delete NUMBER} command. */
-    private static void deleteTask(String command, List<Task> tasks) throws NovaException {
+    private static void deleteTask(String command, List<Task> tasks) throws NovaException, IOException {
         String taskNumberText = command.substring("delete".length()).trim();
         int taskNumber;
         try {
@@ -115,13 +121,14 @@ public class Nova {
         }
 
         Task removedTask = tasks.remove(taskIndex);
+        STORAGE.save(tasks);
         System.out.println(" Noted. I've removed this task:");
         System.out.println("  " + removedTask);
         System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
     }
 
     /** Adds a todo described by a {@code todo DESCRIPTION} command. */
-    private static void addTodo(String command, List<Task> tasks) throws NovaException {
+    private static void addTodo(String command, List<Task> tasks) throws NovaException, IOException {
         String description = command.substring("todo".length()).trim();
         if (description.isEmpty()) {
             throw new NovaException("The description of a todo cannot be empty.");
@@ -130,7 +137,7 @@ public class Nova {
     }
 
     /** Adds a deadline described by a {@code deadline DESCRIPTION /by TIME} command. */
-    private static void addDeadline(String command, List<Task> tasks) throws NovaException {
+    private static void addDeadline(String command, List<Task> tasks) throws NovaException, IOException {
         String details = command.substring("deadline".length()).trim();
         int byMarker = details.indexOf(" /by ");
         if (byMarker < 1 || byMarker + " /by ".length() >= details.length()) {
@@ -143,7 +150,7 @@ public class Nova {
     }
 
     /** Adds an event described by an {@code event DESCRIPTION /from START /to END} command. */
-    private static void addEvent(String command, List<Task> tasks) throws NovaException {
+    private static void addEvent(String command, List<Task> tasks) throws NovaException, IOException {
         String details = command.substring("event".length()).trim();
         int fromMarker = details.indexOf(" /from ");
         int toMarker = details.indexOf(" /to ", fromMarker + 1);
@@ -164,8 +171,9 @@ public class Nova {
     }
 
     /** Stores and displays a task in the dynamically sized task list. */
-    private static void storeTask(Task task, List<Task> tasks) {
+    private static void storeTask(Task task, List<Task> tasks) throws IOException {
         tasks.add(task);
+        STORAGE.save(tasks);
         System.out.println(" Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
