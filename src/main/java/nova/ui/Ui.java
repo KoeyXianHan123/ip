@@ -1,6 +1,10 @@
+package nova.ui;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
+
+import nova.task.Task;
 
 /**
  * Handles console input and output for Nova.

@@ -1,4 +1,10 @@
+package nova.command;
+
 import java.io.IOException;
+
+import nova.exception.NovaException;
+import nova.task.TaskList;
+import nova.ui.Ui;
 
 /**
  * Represents a user command that can be executed by Nova.

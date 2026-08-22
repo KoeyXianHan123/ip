@@ -1,6 +1,15 @@
+package nova;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+
+import nova.command.Command;
+import nova.exception.NovaException;
+import nova.parser.Parser;
+import nova.storage.Storage;
+import nova.task.TaskList;
+import nova.ui.Ui;
 
 /**
  * Starts the Nova chatbot application.

@@ -1,4 +1,10 @@
+package nova.command;
+
 import java.io.IOException;
+
+import nova.task.Task;
+import nova.task.TaskList;
+import nova.ui.Ui;
 
 /**
  * Adds a task to the task list.

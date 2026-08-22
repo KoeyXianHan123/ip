@@ -40,7 +40,7 @@ def main():
     if version.returncode or not version_text.startswith("javac 25"):
         print(f"TEST SESSION FAILED: Java 25 required; found {version_text or 'no javac'}")
         return 1
-    sources = sorted((root / "src" / "main" / "java").glob("*.java"))
+    sources = sorted((root / "src" / "main" / "java").rglob("*.java"))
     with tempfile.TemporaryDirectory(prefix="nova-ui-test-") as classes:
         compiled = execute(["javac", "-d", classes, *map(str, sources)])
         if compiled.returncode:
@@ -56,7 +56,9 @@ def main():
                     data_file.parent.mkdir(parents=True)
                     data_file.write_text(normalized(initial_data) + "\n", encoding="utf-8")
                 result = execute(
-                    ["java", "-cp", classes, "Nova"], input=commands + "\n", cwd=run_directory
+                    ["java", "-cp", classes, "nova.Nova"],
+                    input=commands + "\n",
+                    cwd=run_directory,
                 )
                 actual = normalized(result.stdout)
                 print(f"\n[{number}/{len(cases)}] {name}\nAim: {aim.strip()}")

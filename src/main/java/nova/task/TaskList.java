@@ -1,14 +1,19 @@
+package nova.task;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import nova.exception.NovaException;
+import nova.storage.Storage;
 
 /**
  * Owns Nova's tasks and manages operations that inspect or change them.
  */
 public class TaskList {
     /** Associates a task with its one-based position in the task list. */
-    static class NumberedTask {
+    public static class NumberedTask {
         private final int taskNumber;
         private final Task task;
 
@@ -17,11 +22,13 @@ public class TaskList {
             this.task = task;
         }
 
-        int getTaskNumber() {
+        /** Returns this task's one-based position in the task list. */
+        public int getTaskNumber() {
             return taskNumber;
         }
 
-        Task getTask() {
+        /** Returns the numbered task. */
+        public Task getTask() {
             return task;
         }
     }
