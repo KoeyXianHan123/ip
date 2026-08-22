@@ -4,14 +4,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Starts the Nova chatbot application.
  */
 public class Nova {
-    private static final String DIVIDER = "____________________________________________________________";
     private static final Storage STORAGE = new Storage(Path.of("data", "nova.txt"));
+    private static final Ui UI = new Ui();
 
     /**
      * Greets the user, stores tasks, lists stored tasks, and exits when the user enters {@code bye}.
@@ -19,36 +18,24 @@ public class Nova {
      * @param args command-line arguments; not used
      */
     public static void main(String[] args) {
-        String banner = " _   _                  \n"
-                + "| \\ | | _____   ____ _ \n"
-                + "|  \\| |/ _ \\ \\ / / _` |\n"
-                + "| |\\  | (_) \\ V / (_| |\n"
-                + "|_| \\_|\\___/ \\_/ \\__,_|\n";
-        System.out.println(banner);
-        System.out.println("Hello! I'm Nova.");
-        System.out.println("What can I do for you?");
-        System.out.println(DIVIDER);
-
-        Scanner scanner = new Scanner(System.in);
+        UI.showWelcome();
         List<Task> tasks;
         try {
             tasks = STORAGE.load();
             if (STORAGE.getSkippedRecordCount() > 0) {
-                System.out.println(" OOPS!!! I skipped " + STORAGE.getSkippedRecordCount()
-                        + " corrupted task record(s) in the data file.");
+                UI.showSkippedRecords(STORAGE.getSkippedRecordCount());
             }
         } catch (IOException exception) {
-            System.out.println(" OOPS!!! I could not load your tasks from the data file.");
+            UI.showError("I could not load your tasks from the data file.");
             tasks = new ArrayList<>();
         }
 
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
+        while (UI.hasNextCommand()) {
+            String command = UI.readCommand();
 
-            System.out.println(DIVIDER);
+            UI.showDivider();
             if (command.equals("bye")) {
-                System.out.println(" Bye. Hope to see you again soon!");
-                System.out.println(DIVIDER);
+                UI.showGoodbye();
                 break;
             }
 
@@ -73,11 +60,11 @@ public class Nova {
                     throw new NovaException("I'm sorry, but I don't know what that means :-(");
                 }
             } catch (NovaException exception) {
-                System.out.println(" OOPS!!! " + exception.getMessage());
+                UI.showError(exception.getMessage());
             } catch (IOException exception) {
-                System.out.println(" OOPS!!! I could not save your tasks to the data file.");
+                UI.showError("I could not save your tasks to the data file.");
             }
-            System.out.println(DIVIDER);
+            UI.showDivider();
         }
     }
 
@@ -88,10 +75,7 @@ public class Nova {
 
     /** Displays all stored tasks. */
     private static void listTasks(List<Task> tasks) {
-        System.out.println(" Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println(" " + (i + 1) + "." + tasks.get(i));
-        }
+        UI.showTasks(tasks);
     }
 
     /** Marks or unmarks the task selected by a command. */
@@ -125,12 +109,7 @@ public class Nova {
             }
             throw exception;
         }
-        if (shouldMark) {
-            System.out.println(" Nice! I've marked this task as done:");
-        } else {
-            System.out.println(" OK, I've marked this task as not done yet:");
-        }
-        System.out.println("  " + task);
+        UI.showMarkedTask(task, shouldMark);
     }
 
     /** Deletes the task selected by a {@code delete NUMBER} command. */
@@ -155,9 +134,7 @@ public class Nova {
             tasks.add(taskIndex, removedTask);
             throw exception;
         }
-        System.out.println(" Noted. I've removed this task:");
-        System.out.println("  " + removedTask);
-        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+        UI.showDeletedTask(removedTask, tasks.size());
     }
 
     /** Adds a todo described by a {@code todo DESCRIPTION} command. */
@@ -217,11 +194,11 @@ public class Nova {
             throw new NovaException("The date must be a valid date in yyyy-MM-dd format.");
         }
 
-        System.out.println(" Here are the deadlines on " + date + ":");
+        UI.showDeadlinesOn(date);
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
             if (task instanceof Deadline deadline && deadline.isDueOn(date)) {
-                System.out.println(" " + (i + 1) + "." + task);
+                UI.showNumberedTask(i + 1, task);
             }
         }
     }
@@ -235,8 +212,6 @@ public class Nova {
             tasks.remove(tasks.size() - 1);
             throw exception;
         }
-        System.out.println(" Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+        UI.showAddedTask(task, tasks.size());
     }
 }
