@@ -7,7 +7,8 @@ import tempfile
 from pathlib import Path
 
 PATTERN = re.compile(
-    r"^## (.+?)\n+Aim:\s*(.+?)\n+### Input\s*\n+```(?:text)?\n(.*?)\n```\s*\n+"
+    r"^## (.+?)\n+Aim:\s*(.+?)\n+(?:### Initial data file\s*\n+```(?:text)?\n(.*?)\n```\s*\n+)?"
+    r"### Input\s*\n+```(?:text)?\n(.*?)\n```\s*\n+"
     r"### Expected output\s*\n+```(?:text)?\n(.*?)\n```(?=\s*(?:\n## |\Z))",
     re.MULTILINE | re.DOTALL,
 )
@@ -47,19 +48,28 @@ def main():
             print(normalized(compiled.stdout + compiled.stderr))
             return 1
         print(f"UI TEST SESSION ({len(cases)} cases, {version_text})")
-        for number, (name, aim, commands, expected) in enumerate(cases, 1):
+        for number, (name, aim, initial_data, commands, expected) in enumerate(cases, 1):
             commands, expected = normalized(commands), normalized(expected)
-            result = execute(["java", "-cp", classes, "Nova"], input=commands + "\n")
-            actual = normalized(result.stdout)
-            print(f"\n[{number}/{len(cases)}] {name}\nAim: {aim.strip()}")
-            print(f"--- CONSOLE INPUT ---\n{commands}")
-            print(f"--- CONSOLE OUTPUT ---\n{actual}")
-            if result.returncode or actual != expected:
-                print(f"--- RESULT: FAILED ---\n--- EXPECTED OUTPUT ---\n{expected}")
-                print(f"--- ACTUAL OUTPUT ---\n{actual}")
-                print("TEST SESSION TERMINATED AFTER FIRST FAILURE")
-                return 1
-            print("--- RESULT: PASSED ---")
+            with tempfile.TemporaryDirectory(prefix="nova-ui-case-") as run_directory:
+                if initial_data:
+                    data_file = Path(run_directory) / "data" / "nova.txt"
+                    data_file.parent.mkdir(parents=True)
+                    data_file.write_text(normalized(initial_data) + "\n", encoding="utf-8")
+                result = execute(
+                    ["java", "-cp", classes, "Nova"], input=commands + "\n", cwd=run_directory
+                )
+                actual = normalized(result.stdout)
+                print(f"\n[{number}/{len(cases)}] {name}\nAim: {aim.strip()}")
+                if initial_data:
+                    print(f"--- INITIAL DATA FILE ---\n{normalized(initial_data)}")
+                print(f"--- CONSOLE INPUT ---\n{commands}")
+                print(f"--- CONSOLE OUTPUT ---\n{actual}")
+                if result.returncode or actual != expected:
+                    print(f"--- RESULT: FAILED ---\n--- EXPECTED OUTPUT ---\n{expected}")
+                    print(f"--- ACTUAL OUTPUT ---\n{actual}")
+                    print("TEST SESSION TERMINATED AFTER FIRST FAILURE")
+                    return 1
+                print("--- RESULT: PASSED ---")
     print(f"\nTEST SESSION PASSED: {len(cases)}/{len(cases)} cases")
     return 0
 

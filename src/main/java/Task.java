@@ -1,3 +1,6 @@
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 /**
  * Represents the common description and completion state shared by all tasks.
  */
@@ -36,6 +39,30 @@ public class Task {
      */
     public void markAsNotDone() {
         isDone = false;
+    }
+
+    /** Returns whether this task is completed. */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /** Returns this task's completion state in the data-file format. */
+    protected String getDataStatus() {
+        return isDone ? "1" : "0";
+    }
+
+    /**
+     * Returns this task in the format used by the data file.
+     *
+     * @return serialized task
+     */
+    public String toDataString() {
+        return "V2 | T | " + getDataStatus() + " | " + encodeDataField(description);
+    }
+
+    /** Returns a text field encoded safely for storage in a delimited record. */
+    protected String encodeDataField(String value) {
+        return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
     }
 
     /**

@@ -1,6 +1,6 @@
 # Nova UI Test Plan
 
-Run cases in order with Java 25. Each case starts Nova in a fresh process.
+Run cases in order with Java 25. Each case starts Nova in a fresh process and temporary working directory.
 
 ## TC1: Add and list all task types
 
@@ -178,6 +178,104 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
  OOPS!!! Task 1 does not exist in the list.
+____________________________________________________________
+____________________________________________________________
+ Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC4: Save after completion-state changes
+
+Aim: Verify successful mark and unmark commands remain usable when each task-list change is saved to disk.
+
+### Input
+
+```text
+todo write tests
+mark 1
+unmark 1
+list
+bye
+```
+
+### Expected output
+
+```text
+ _   _                  
+| \ | | _____   ____ _ 
+|  \| |/ _ \ \ / / _` |
+| |\  | (_) \ V / (_| |
+|_| \_|\___/ \_/ \__,_|
+
+Hello! I'm Nova.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [T][ ] write tests
+ Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Nice! I've marked this task as done:
+  [T][X] write tests
+____________________________________________________________
+____________________________________________________________
+ OK, I've marked this task as not done yet:
+  [T][ ] write tests
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list:
+ 1.[T][ ] write tests
+____________________________________________________________
+____________________________________________________________
+ Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC5: Load saved tasks and skip corrupted records
+
+Aim: Verify startup restores encoded and legacy tasks, including delimiter and Unicode text, while safely ignoring malformed records.
+
+### Initial data file
+
+```text
+V2 | T | 1 | cmVhZCB8IGNhZsOp
+V2 | D | 0 | cmV0dXJuIGJvb2s= | SnVuZSB8IDZ0aA==
+V2 | E | 0 | cHJvamVjdCBtZWV0aW5n | QXVnIDZ0aCAycG0= | NHBt
+T | 0 | legacy task
+V2 | T | 2 | aW52YWxpZCBzdGF0dXM=
+V2 | T | 0 | not_base64!
+V2 | D | 0 | ZGVhZGxpbmU= |
+V2 | X | 0 | dW5rbm93biB0eXBl
+corrupted task data
+```
+
+### Input
+
+```text
+list
+bye
+```
+
+### Expected output
+
+```text
+ _   _                  
+| \ | | _____   ____ _ 
+|  \| |/ _ \ \ / / _` |
+| |\  | (_) \ V / (_| |
+|_| \_|\___/ \_/ \__,_|
+
+Hello! I'm Nova.
+What can I do for you?
+____________________________________________________________
+ OOPS!!! I skipped 5 corrupted task record(s) in the data file.
+____________________________________________________________
+ Here are the tasks in your list:
+ 1.[T][X] read | café
+ 2.[D][ ] return book (by: June | 6th)
+ 3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+ 4.[T][ ] legacy task
 ____________________________________________________________
 ____________________________________________________________
  Bye. Hope to see you again soon!

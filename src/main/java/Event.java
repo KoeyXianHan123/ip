@@ -19,6 +19,12 @@ public class Event extends Task {
     }
 
     @Override
+    public String toDataString() {
+        return "V2 | E | " + getDataStatus() + " | " + encodeDataField(description)
+                + " | " + encodeDataField(from) + " | " + encodeDataField(to);
+    }
+
+    @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
