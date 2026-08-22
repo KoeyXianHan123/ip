@@ -6,9 +6,22 @@ import java.util.ArrayList;
  * Starts the Nova chatbot application.
  */
 public class Nova {
-    private static final Storage STORAGE = new Storage(Path.of("data", "nova.txt"));
-    private static final Ui UI = new Ui();
-    private static final Parser PARSER = new Parser();
+    private final Storage storage;
+    private final Ui ui;
+    private final Parser parser;
+
+    /**
+     * Creates a Nova application with its collaborating components.
+     *
+     * @param storage storage used to load and save tasks
+     * @param ui UI used for console interaction
+     * @param parser parser used to interpret commands
+     */
+    public Nova(Storage storage, Ui ui, Parser parser) {
+        this.storage = storage;
+        this.ui = ui;
+        this.parser = parser;
+    }
 
     /**
      * Greets the user, stores tasks, lists stored tasks, and exits when the user enters {@code bye}.
@@ -16,63 +29,70 @@ public class Nova {
      * @param args command-line arguments; not used
      */
     public static void main(String[] args) {
-        UI.showWelcome();
+        Storage storage = new Storage(Path.of("data", "nova.txt"));
+        Nova nova = new Nova(storage, new Ui(), new Parser());
+        nova.run();
+    }
+
+    /** Starts Nova's command loop. */
+    public void run() {
+        ui.showWelcome();
         TaskList tasks;
         try {
-            tasks = new TaskList(STORAGE.load(), STORAGE);
-            if (STORAGE.getSkippedRecordCount() > 0) {
-                UI.showSkippedRecords(STORAGE.getSkippedRecordCount());
+            tasks = new TaskList(storage.load(), storage);
+            if (storage.getSkippedRecordCount() > 0) {
+                ui.showSkippedRecords(storage.getSkippedRecordCount());
             }
         } catch (IOException exception) {
-            UI.showError("I could not load your tasks from the data file.");
-            tasks = new TaskList(new ArrayList<>(), STORAGE);
+            ui.showError("I could not load your tasks from the data file.");
+            tasks = new TaskList(new ArrayList<>(), storage);
         }
 
-        while (UI.hasNextCommand()) {
-            UI.showDivider();
+        while (ui.hasNextCommand()) {
+            ui.showDivider();
             try {
-                Parser.ParsedCommand command = PARSER.parse(UI.readCommand());
+                Parser.ParsedCommand command = parser.parse(ui.readCommand());
                 if (command.getType() == Parser.CommandType.BYE) {
-                    UI.showGoodbye();
+                    ui.showGoodbye();
                     break;
                 }
                 executeCommand(command, tasks);
             } catch (NovaException exception) {
-                UI.showError(exception.getMessage());
+                ui.showError(exception.getMessage());
             } catch (IOException exception) {
-                UI.showError("I could not save your tasks to the data file.");
+                ui.showError("I could not save your tasks to the data file.");
             }
-            UI.showDivider();
+            ui.showDivider();
         }
     }
 
     /** Executes a parsed command. */
-    private static void executeCommand(Parser.ParsedCommand command, TaskList tasks)
+    private void executeCommand(Parser.ParsedCommand command, TaskList tasks)
             throws NovaException, IOException {
         switch (command.getType()) {
             case LIST:
-                UI.showTasks(tasks.getTasks());
+                ui.showTasks(tasks.getTasks());
                 break;
             case MARK:
                 Task markedTask = tasks.setMarked(command.getTaskNumber(), true);
-                UI.showMarkedTask(markedTask, true);
+                ui.showMarkedTask(markedTask, true);
                 break;
             case UNMARK:
                 Task unmarkedTask = tasks.setMarked(command.getTaskNumber(), false);
-                UI.showMarkedTask(unmarkedTask, false);
+                ui.showMarkedTask(unmarkedTask, false);
                 break;
             case DELETE:
                 Task deletedTask = tasks.delete(command.getTaskNumber());
-                UI.showDeletedTask(deletedTask, tasks.size());
+                ui.showDeletedTask(deletedTask, tasks.size());
                 break;
             case ADD:
                 tasks.add(command.getTask());
-                UI.showAddedTask(command.getTask(), tasks.size());
+                ui.showAddedTask(command.getTask(), tasks.size());
                 break;
             case SHOW_ON_DATE:
-                UI.showDeadlinesOn(command.getDate());
+                ui.showDeadlinesOn(command.getDate());
                 for (TaskList.NumberedTask task : tasks.getDeadlinesOn(command.getDate())) {
-                    UI.showNumberedTask(task.getTaskNumber(), task.getTask());
+                    ui.showNumberedTask(task.getTaskNumber(), task.getTask());
                 }
                 break;
             case BYE:
