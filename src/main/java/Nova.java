@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,7 @@ import java.util.List;
 public class Nova {
     private static final Storage STORAGE = new Storage(Path.of("data", "nova.txt"));
     private static final Ui UI = new Ui();
+    private static final Parser PARSER = new Parser();
 
     /**
      * Greets the user, stores tasks, lists stored tasks, and exits when the user enters {@code bye}.
@@ -31,34 +31,14 @@ public class Nova {
         }
 
         while (UI.hasNextCommand()) {
-            String command = UI.readCommand();
-
             UI.showDivider();
-            if (command.equals("bye")) {
-                UI.showGoodbye();
-                break;
-            }
-
             try {
-                if (command.equals("list")) {
-                    listTasks(tasks);
-                } else if (isCommand(command, "mark")) {
-                    markTask(command, tasks, true);
-                } else if (isCommand(command, "unmark")) {
-                    markTask(command, tasks, false);
-                } else if (isCommand(command, "delete")) {
-                    deleteTask(command, tasks);
-                } else if (isCommand(command, "todo")) {
-                    addTodo(command, tasks);
-                } else if (isCommand(command, "deadline")) {
-                    addDeadline(command, tasks);
-                } else if (isCommand(command, "event")) {
-                    addEvent(command, tasks);
-                } else if (isCommand(command, "on")) {
-                    showDeadlinesOn(command, tasks);
-                } else {
-                    throw new NovaException("I'm sorry, but I don't know what that means :-(");
+                Parser.ParsedCommand command = PARSER.parse(UI.readCommand());
+                if (command.getType() == Parser.CommandType.BYE) {
+                    UI.showGoodbye();
+                    break;
                 }
+                executeCommand(command, tasks);
             } catch (NovaException exception) {
                 UI.showError(exception.getMessage());
             } catch (IOException exception) {
@@ -68,29 +48,41 @@ public class Nova {
         }
     }
 
-    /** Returns whether the input contains the given command word. */
-    private static boolean isCommand(String input, String commandWord) {
-        return input.equals(commandWord) || input.startsWith(commandWord + " ");
-    }
-
-    /** Displays all stored tasks. */
-    private static void listTasks(List<Task> tasks) {
-        UI.showTasks(tasks);
+    /** Executes a parsed command. */
+    private static void executeCommand(Parser.ParsedCommand command, List<Task> tasks)
+            throws NovaException, IOException {
+        switch (command.getType()) {
+            case LIST:
+                UI.showTasks(tasks);
+                break;
+            case MARK:
+                markTask(command.getTaskNumber(), tasks, true);
+                break;
+            case UNMARK:
+                markTask(command.getTaskNumber(), tasks, false);
+                break;
+            case DELETE:
+                deleteTask(command.getTaskNumber(), tasks);
+                break;
+            case ADD:
+                storeTask(command.getTask(), tasks);
+                break;
+            case SHOW_ON_DATE:
+                showDeadlinesOn(command.getDate(), tasks);
+                break;
+            case BYE:
+                break;
+            default:
+                throw new AssertionError("Unhandled command type: " + command.getType());
+        }
     }
 
     /** Marks or unmarks the task selected by a command. */
-    private static void markTask(String command, List<Task> tasks, boolean shouldMark)
+    private static void markTask(int taskNumber, List<Task> tasks, boolean shouldMark)
             throws NovaException, IOException {
-        String commandWord = shouldMark ? "mark" : "unmark";
-        String taskNumberText = command.substring(commandWord.length()).trim();
-        int taskIndex;
-        try {
-            taskIndex = Integer.parseInt(taskNumberText) - 1;
-        } catch (NumberFormatException exception) {
-            throw new NovaException("Please enter a task number, for example: " + commandWord + " 1");
-        }
+        int taskIndex = taskNumber - 1;
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
-            throw new NovaException("Task " + (taskIndex + 1) + " does not exist in the list.");
+            throw new NovaException("Task " + taskNumber + " does not exist in the list.");
         }
         Task task = tasks.get(taskIndex);
         boolean wasDone = task.isDone();
@@ -113,15 +105,7 @@ public class Nova {
     }
 
     /** Deletes the task selected by a {@code delete NUMBER} command. */
-    private static void deleteTask(String command, List<Task> tasks) throws NovaException, IOException {
-        String taskNumberText = command.substring("delete".length()).trim();
-        int taskNumber;
-        try {
-            taskNumber = Integer.parseInt(taskNumberText);
-        } catch (NumberFormatException exception) {
-            throw new NovaException("Please enter a task number, for example: delete 1");
-        }
-
+    private static void deleteTask(int taskNumber, List<Task> tasks) throws NovaException, IOException {
         int taskIndex = taskNumber - 1;
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new NovaException("Task " + taskNumber + " does not exist in the list.");
@@ -137,63 +121,8 @@ public class Nova {
         UI.showDeletedTask(removedTask, tasks.size());
     }
 
-    /** Adds a todo described by a {@code todo DESCRIPTION} command. */
-    private static void addTodo(String command, List<Task> tasks) throws NovaException, IOException {
-        String description = command.substring("todo".length()).trim();
-        if (description.isEmpty()) {
-            throw new NovaException("The description of a todo cannot be empty.");
-        }
-        storeTask(new Todo(description), tasks);
-    }
-
-    /** Adds a deadline described by a {@code deadline DESCRIPTION /by yyyy-MM-dd} command. */
-    private static void addDeadline(String command, List<Task> tasks) throws NovaException, IOException {
-        String details = command.substring("deadline".length()).trim();
-        int byMarker = details.indexOf(" /by ");
-        if (byMarker < 1 || byMarker + " /by ".length() >= details.length()) {
-            throw new NovaException("A deadline must follow: deadline DESCRIPTION /by yyyy-MM-dd");
-        }
-
-        String description = details.substring(0, byMarker).trim();
-        String byText = details.substring(byMarker + " /by ".length()).trim();
-        try {
-            storeTask(new Deadline(description, LocalDate.parse(byText)), tasks);
-        } catch (DateTimeParseException exception) {
-            throw new NovaException("The deadline date must be a valid date in yyyy-MM-dd format.");
-        }
-    }
-
-    /** Adds an event described by an {@code event DESCRIPTION /from START /to END} command. */
-    private static void addEvent(String command, List<Task> tasks) throws NovaException, IOException {
-        String details = command.substring("event".length()).trim();
-        int fromMarker = details.indexOf(" /from ");
-        int toMarker = details.indexOf(" /to ", fromMarker + 1);
-        boolean isInvalid = fromMarker < 1
-                || toMarker < fromMarker + " /from ".length()
-                || toMarker + " /to ".length() >= details.length();
-        if (isInvalid) {
-            throw new NovaException("An event must follow: event DESCRIPTION /from START /to END");
-        }
-
-        String description = details.substring(0, fromMarker).trim();
-        String from = details.substring(fromMarker + " /from ".length(), toMarker).trim();
-        String to = details.substring(toMarker + " /to ".length()).trim();
-        if (from.isEmpty()) {
-            throw new NovaException("An event needs a start date or time after /from.");
-        }
-        storeTask(new Event(description, from, to), tasks);
-    }
-
     /** Displays deadlines that fall on the date in an {@code on yyyy-MM-dd} command. */
-    private static void showDeadlinesOn(String command, List<Task> tasks) throws NovaException {
-        String dateText = command.substring("on".length()).trim();
-        LocalDate date;
-        try {
-            date = LocalDate.parse(dateText);
-        } catch (DateTimeParseException exception) {
-            throw new NovaException("The date must be a valid date in yyyy-MM-dd format.");
-        }
-
+    private static void showDeadlinesOn(LocalDate date, List<Task> tasks) {
         UI.showDeadlinesOn(date);
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
