@@ -23,3 +23,24 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## Creating and running the fat JAR
+
+Nova uses the Shadow plugin to package the application and its dependencies into one executable JAR file.
+Run the following command from the project root:
+
+```powershell
+.\gradlew.bat shadowJar
+```
+
+On macOS or Linux, use `./gradlew shadowJar` instead. The generated file is located at
+`build/libs/nova.jar`.
+
+Run the JAR from the project root with Java 25:
+
+```powershell
+java -jar build/libs/nova.jar
+```
+
+Nova stores its data relative to the directory from which the JAR is run. Running it from the project root
+keeps the data file at `data/nova.txt`.
