@@ -17,6 +17,7 @@ import nova.command.AddCommand;
 import nova.command.Command;
 import nova.command.DeleteCommand;
 import nova.command.ExitCommand;
+import nova.command.FindCommand;
 import nova.command.ListCommand;
 import nova.command.MarkCommand;
 import nova.command.ShowOnDateCommand;
@@ -84,6 +85,20 @@ class ParserTest {
     }
 
     @Test
+    void parse_findCommand_executeUsesParsedKeyword() throws Exception {
+        NoOpUi ui = new NoOpUi();
+        Todo matchingTask = new Todo("read book");
+        TaskList taskList = new TaskList(List.of(matchingTask, new Todo("write tests")),
+                new NoOpStorage());
+        Command command = parser.parse("find book");
+
+        assertInstanceOf(FindCommand.class, command);
+        command.execute(taskList, ui);
+
+        assertEquals(List.of(matchingTask), ui.matchingTasks);
+    }
+
+    @Test
     void parse_unknownOrSimilarCommand_throwsUnknownCommandError() {
         assertParseError("", "I'm sorry, but I don't know what that means :-(");
         assertParseError("listing", "I'm sorry, but I don't know what that means :-(");
@@ -94,6 +109,14 @@ class ParserTest {
     void parse_todoWithoutDescription_throwsDescriptionError() {
         assertParseError("todo", "The description of a todo cannot be empty.");
         assertParseError("todo   ", "The description of a todo cannot be empty.");
+    }
+
+    @Test
+    void parse_findWithoutKeyword_throwsKeywordError() {
+        String keywordError = "The keyword for a find command cannot be empty.";
+
+        assertParseError("find", keywordError);
+        assertParseError("find   ", keywordError);
     }
 
     @Test
@@ -165,6 +188,7 @@ class ParserTest {
 
     private static class NoOpUi extends Ui {
         private LocalDate shownDate;
+        private List<Task> matchingTasks;
 
         @Override
         public void showAddedTask(Task task, int taskCount) {
@@ -184,6 +208,11 @@ class ParserTest {
         @Override
         public void showDeadlinesOn(LocalDate date) {
             shownDate = date;
+        }
+
+        @Override
+        public void showMatchingTasks(List<Task> matchingTasks) {
+            this.matchingTasks = List.copyOf(matchingTasks);
         }
     }
 }

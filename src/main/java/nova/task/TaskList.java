@@ -136,6 +136,22 @@ public class TaskList {
         return matchingTasks;
     }
 
+    /**
+     * Returns tasks whose descriptions contain the given keyword.
+     *
+     * @param keyword keyword to search for.
+     * @return matching tasks in task-list order.
+     */
+    public List<Task> findTasks(String keyword) {
+        List<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.description.contains(keyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
+    }
+
     /** Returns the zero-based index for a valid task number. */
     private int getTaskIndex(int taskNumber) throws NovaException {
         int taskIndex = taskNumber - 1;

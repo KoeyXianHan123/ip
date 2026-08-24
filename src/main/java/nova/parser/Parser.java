@@ -7,6 +7,7 @@ import nova.command.AddCommand;
 import nova.command.Command;
 import nova.command.DeleteCommand;
 import nova.command.ExitCommand;
+import nova.command.FindCommand;
 import nova.command.ListCommand;
 import nova.command.MarkCommand;
 import nova.command.ShowOnDateCommand;
@@ -37,6 +38,8 @@ public class Parser {
             return new MarkCommand(parseTaskNumber(input, "unmark"), false);
         } else if (isCommand(input, "delete")) {
             return new DeleteCommand(parseTaskNumber(input, "delete"));
+        } else if (isCommand(input, "find")) {
+            return parseFind(input);
         } else if (isCommand(input, "todo")) {
             return parseTodo(input);
         } else if (isCommand(input, "deadline")) {
@@ -71,6 +74,21 @@ public class Parser {
             throw new NovaException("The description of a todo cannot be empty.");
         }
         return new AddCommand(new Todo(description));
+    }
+
+    /**
+     * Returns a find command containing a non-empty keyword.
+     *
+     * @param input raw find command.
+     * @return command that searches for the parsed keyword.
+     * @throws NovaException if the keyword is empty.
+     */
+    private Command parseFind(String input) throws NovaException {
+        String keyword = input.substring("find".length()).trim();
+        if (keyword.isEmpty()) {
+            throw new NovaException("The keyword for a find command cannot be empty.");
+        }
+        return new FindCommand(keyword);
     }
 
     /** Returns an add command containing a deadline. */

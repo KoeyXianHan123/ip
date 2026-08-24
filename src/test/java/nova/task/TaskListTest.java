@@ -165,6 +165,43 @@ class TaskListTest {
         assertSame(secondMatch, matches.get(1).getTask());
     }
 
+    @Test
+    void findTasks_emptyList_returnsEmptyList() {
+        TaskList taskList = new TaskList(List.of(), UNUSED_STORAGE);
+
+        assertTrue(taskList.findTasks("book").isEmpty());
+    }
+
+    @Test
+    void findTasks_mixedTasks_returnsDescriptionMatchesInTaskListOrder() {
+        Todo firstMatch = new Todo("read book");
+        Deadline secondMatch = new Deadline("return book", SEARCH_DATE);
+        Event thirdMatch = new Event("book launch", "2pm", "4pm");
+        TaskList taskList = new TaskList(List.of(
+                firstMatch,
+                new Todo("write report"),
+                secondMatch,
+                thirdMatch), UNUSED_STORAGE);
+
+        assertEquals(List.of(firstMatch, secondMatch, thirdMatch), taskList.findTasks("book"));
+    }
+
+    @Test
+    void findTasks_keywordOnlyInMetadata_returnsEmptyList() {
+        TaskList taskList = new TaskList(List.of(
+                new Deadline("submit report", LocalDate.of(2026, 8, 24)),
+                new Event("project meeting", "bookstore", "library")), UNUSED_STORAGE);
+
+        assertTrue(taskList.findTasks("book").isEmpty());
+    }
+
+    @Test
+    void findTasks_keywordWithDifferentCase_returnsEmptyList() {
+        TaskList taskList = new TaskList(List.of(new Todo("read book")), UNUSED_STORAGE);
+
+        assertTrue(taskList.findTasks("Book").isEmpty());
+    }
+
     private static class RecordingStorage extends Storage {
         private boolean shouldFail;
         private int saveCount;

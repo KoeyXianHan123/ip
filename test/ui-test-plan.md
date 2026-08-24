@@ -371,3 +371,78 @@ ____________________________________________________________
  Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## TC7: Find tasks by description keyword
+
+Aim: Verify the find command lists matching task descriptions in order, ignores task metadata, rejects an empty
+keyword, and leaves the task list unchanged after searches and errors.
+
+### Input
+
+```text
+todo read book
+deadline return book /by 2019-06-06
+event book launch /from 2pm /to 4pm
+todo write report
+find book
+find 2019
+find
+list
+bye
+```
+
+### Expected output
+
+```text
+ _   _                  
+| \ | | _____   ____ _ 
+|  \| |/ _ \ \ / / _` |
+| |\  | (_) \ V / (_| |
+|_| \_|\___/ \_/ \__,_|
+
+Hello! I'm Nova.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [T][ ] read book
+ Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [D][ ] return book (by: Jun 6 2019)
+ Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [E][ ] book launch (from: 2pm to: 4pm)
+ Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [T][ ] write report
+ Now you have 4 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Here are the matching tasks in your list:
+ 1.[T][ ] read book
+ 2.[D][ ] return book (by: Jun 6 2019)
+ 3.[E][ ] book launch (from: 2pm to: 4pm)
+____________________________________________________________
+____________________________________________________________
+ Here are the matching tasks in your list:
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! The keyword for a find command cannot be empty.
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list:
+ 1.[T][ ] read book
+ 2.[D][ ] return book (by: Jun 6 2019)
+ 3.[E][ ] book launch (from: 2pm to: 4pm)
+ 4.[T][ ] write report
+____________________________________________________________
+____________________________________________________________
+ Bye. Hope to see you again soon!
+____________________________________________________________
+```
