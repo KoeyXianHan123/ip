@@ -47,8 +47,9 @@ Advanced rules from the standard are optional. Do not modify otherwise-correct e
 
 After every update to source code:
 
-1. Review `test/ui-test-plan.md` and update it when the changed or newly added behavior is not adequately covered. Each added test case must state its aim, inputs, and exact expected output.
-2. Invoke the project-specific `$test-ui` skill and run the UI test plan. Do not consider the code update complete until the test session passes, or until a failure has been reported to the user with the actual and expected outputs.
+1. Review and update the JUnit tests to maintain coverage of approximately the top 50% highest-value methods, prioritizing complex, core, and critical business logic. Include all reasonable success, boundary, invalid-input, and failure cases for the selected methods, and run the Gradle JUnit test suite.
+2. Review `test/ui-test-plan.md` and update it when the changed or newly added behavior is not adequately covered. Each added test case must state its aim, inputs, and exact expected output.
+3. Invoke the project-specific `$test-ui` skill and run the UI test plan. Do not consider the code update complete until both the JUnit and UI test sessions pass, or until a failure has been reported to the user with the actual and expected outputs.
 
 When adding a feature or command, identify its invalid-input and failure cases, implement clear error handling for them, and add corresponding negative test cases to `test/ui-test-plan.md` as needed. Negative tests must verify both the error message and that the chatbot remains in a valid state afterward.
 
