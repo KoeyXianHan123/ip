@@ -20,6 +20,12 @@ import nova.task.Todo;
  */
 public class Parser {
     /**
+     * Creates a parser for Nova commands.
+     */
+    public Parser() {
+    }
+
+    /**
      * Parses user input into a command and validates its arguments.
      *
      * @param input raw user input
@@ -49,12 +55,25 @@ public class Parser {
         throw new NovaException("I'm sorry, but I don't know what that means :-(");
     }
 
-    /** Returns whether the input contains the given command word. */
+    /**
+     * Returns whether the input contains the given command word.
+     *
+     * @param input raw user input
+     * @param commandWord command word to match
+     * @return {@code true} if the input starts with the complete command word
+     */
     private boolean isCommand(String input, String commandWord) {
         return input.equals(commandWord) || input.startsWith(commandWord + " ");
     }
 
-    /** Returns the task-list number in a numbered command. */
+    /**
+     * Returns the task-list number in a numbered command.
+     *
+     * @param input raw user input
+     * @param commandWord command word preceding the task number
+     * @return parsed task number
+     * @throws NovaException if the command does not contain an integer task number
+     */
     private int parseTaskNumber(String input, String commandWord) throws NovaException {
         String taskNumberText = input.substring(commandWord.length()).trim();
         try {
@@ -64,7 +83,13 @@ public class Parser {
         }
     }
 
-    /** Returns an add command containing a todo. */
+    /**
+     * Returns an add command containing a todo.
+     *
+     * @param input raw todo command
+     * @return command that adds the parsed todo
+     * @throws NovaException if the todo description is empty
+     */
     private Command parseTodo(String input) throws NovaException {
         String description = input.substring("todo".length()).trim();
         if (description.isEmpty()) {
@@ -73,7 +98,13 @@ public class Parser {
         return new AddCommand(new Todo(description));
     }
 
-    /** Returns an add command containing a deadline. */
+    /**
+     * Returns an add command containing a deadline.
+     *
+     * @param input raw deadline command
+     * @return command that adds the parsed deadline
+     * @throws NovaException if the command format or deadline date is invalid
+     */
     private Command parseDeadline(String input) throws NovaException {
         String details = input.substring("deadline".length()).trim();
         int byMarker = details.indexOf(" /by ");
@@ -90,7 +121,13 @@ public class Parser {
         }
     }
 
-    /** Returns an add command containing an event. */
+    /**
+     * Returns an add command containing an event.
+     *
+     * @param input raw event command
+     * @return command that adds the parsed event
+     * @throws NovaException if the command format or event times are invalid
+     */
     private Command parseEvent(String input) throws NovaException {
         String details = input.substring("event".length()).trim();
         int fromMarker = details.indexOf(" /from ");
@@ -111,7 +148,13 @@ public class Parser {
         return new AddCommand(new Event(description, from, to));
     }
 
-    /** Returns a command that searches for deadlines on a date. */
+    /**
+     * Returns a command that searches for deadlines on a date.
+     *
+     * @param input raw date-search command
+     * @return command that searches the parsed date
+     * @throws NovaException if the date is invalid
+     */
     private Command parseDateSearch(String input) throws NovaException {
         String dateText = input.substring("on".length()).trim();
         try {

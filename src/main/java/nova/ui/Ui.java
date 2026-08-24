@@ -34,12 +34,20 @@ public class Ui {
         showDivider();
     }
 
-    /** Returns whether another command is available from standard input. */
+    /**
+     * Returns whether another command is available from standard input.
+     *
+     * @return {@code true} if another command is available
+     */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
     }
 
-    /** Returns the next command from standard input. */
+    /**
+     * Returns the next command from standard input.
+     *
+     * @return next command entered by the user
+     */
     public String readCommand() {
         return scanner.nextLine();
     }
@@ -54,18 +62,30 @@ public class Ui {
         System.out.println(" Bye. Hope to see you again soon!");
     }
 
-    /** Displays an error message. */
+    /**
+     * Displays an error message.
+     *
+     * @param message explanation of the error
+     */
     public void showError(String message) {
         System.out.println(" OOPS!!! " + message);
     }
 
-    /** Displays the number of corrupted records skipped while loading. */
+    /**
+     * Displays the number of corrupted records skipped while loading.
+     *
+     * @param skippedRecordCount number of corrupted records skipped
+     */
     public void showSkippedRecords(int skippedRecordCount) {
         System.out.println(" OOPS!!! I skipped " + skippedRecordCount
                 + " corrupted task record(s) in the data file.");
     }
 
-    /** Displays all tasks with their task-list numbers. */
+    /**
+     * Displays all tasks with their task-list numbers.
+     *
+     * @param tasks tasks to display
+     */
     public void showTasks(List<Task> tasks) {
         System.out.println(" Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
@@ -73,7 +93,12 @@ public class Ui {
         }
     }
 
-    /** Displays a task whose completion state changed. */
+    /**
+     * Displays a task whose completion state changed.
+     *
+     * @param task task whose completion state changed
+     * @param isMarked whether the task is now completed
+     */
     public void showMarkedTask(Task task, boolean isMarked) {
         if (isMarked) {
             System.out.println(" Nice! I've marked this task as done:");
@@ -83,26 +108,45 @@ public class Ui {
         System.out.println("  " + task);
     }
 
-    /** Displays a deleted task and the remaining task count. */
+    /**
+     * Displays a deleted task and the remaining task count.
+     *
+     * @param task deleted task
+     * @param taskCount number of tasks remaining
+     */
     public void showDeletedTask(Task task, int taskCount) {
         System.out.println(" Noted. I've removed this task:");
         System.out.println("  " + task);
         System.out.println(" Now you have " + taskCount + " tasks in the list.");
     }
 
-    /** Displays an added task and the new task count. */
+    /**
+     * Displays an added task and the new task count.
+     *
+     * @param task added task
+     * @param taskCount number of tasks after the addition
+     */
     public void showAddedTask(Task task, int taskCount) {
         System.out.println(" Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println(" Now you have " + taskCount + " tasks in the list.");
     }
 
-    /** Displays the heading for deadlines that occur on a given date. */
+    /**
+     * Displays the heading for deadlines that occur on a given date.
+     *
+     * @param date date whose deadlines will be displayed
+     */
     public void showDeadlinesOn(LocalDate date) {
         System.out.println(" Here are the deadlines on " + date + ":");
     }
 
-    /** Displays a task with its task-list number. */
+    /**
+     * Displays a task with its task-list number.
+     *
+     * @param taskNumber one-based task number
+     * @param task task to display
+     */
     public void showNumberedTask(int taskNumber, Task task) {
         System.out.println(" " + taskNumber + "." + task);
     }

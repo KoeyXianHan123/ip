@@ -63,7 +63,11 @@ public class Storage {
         return tasks;
     }
 
-    /** Returns the number of malformed records skipped by the most recent load. */
+    /**
+     * Returns the number of malformed records skipped by the most recent load.
+     *
+     * @return number of skipped records
+     */
     public int getSkippedRecordCount() {
         return skippedRecordCount;
     }
@@ -92,7 +96,12 @@ public class Storage {
         }
     }
 
-    /** Returns the task represented by a data-file record, or {@code null} if it is malformed. */
+    /**
+     * Returns the task represented by a data-file record, or {@code null} if it is malformed.
+     *
+     * @param line data-file record to parse
+     * @return parsed task, or {@code null} if the record is malformed
+     */
     private Task parseTask(String line) {
         String[] fields = line.split(" \\| ", -1);
         try {
@@ -105,7 +114,12 @@ public class Storage {
         }
     }
 
-    /** Returns a task from the original plain-text format, or {@code null} if invalid. */
+    /**
+     * Returns a task from the original plain-text format, or {@code null} if invalid.
+     *
+     * @param fields fields from a legacy data-file record
+     * @return parsed task, or {@code null} if the fields are invalid
+     */
     private Task parseLegacyTask(String[] fields) {
         if (fields.length < 2 || !hasValidStatus(fields[1])) {
             return null;
@@ -113,7 +127,12 @@ public class Storage {
         return createTask(fields[0], fields[1], fields, 2);
     }
 
-    /** Returns a task from the version-two encoded format, or {@code null} if invalid. */
+    /**
+     * Returns a task from the version-two encoded format, or {@code null} if invalid.
+     *
+     * @param fields fields from a version-two data-file record
+     * @return parsed task, or {@code null} if the fields are invalid
+     */
     private Task parseVersionTwoTask(String[] fields) {
         if (fields.length < 3 || !hasValidStatus(fields[2])) {
             return null;
@@ -125,7 +144,15 @@ public class Storage {
         return createTask(decodedFields[1], decodedFields[2], decodedFields, 3);
     }
 
-    /** Returns a task built from validated fields, or {@code null} if the record shape is invalid. */
+    /**
+     * Returns a task built from validated fields, or {@code null} if the record shape is invalid.
+     *
+     * @param type task type identifier
+     * @param status serialized completion state
+     * @param fields decoded data-file fields
+     * @param textStart index of the first task-specific text field
+     * @return parsed task, or {@code null} if the record shape is invalid
+     */
     private Task createTask(String type, String status, String[] fields, int textStart) {
         Task task;
         switch (type) {
@@ -155,23 +182,44 @@ public class Storage {
         return task;
     }
 
-    /** Returns a decoded version-two text field. */
+    /**
+     * Returns a decoded version-two text field.
+     *
+     * @param value Base64-encoded text field
+     * @return decoded text
+     */
     private String decodeDataField(String value) {
         byte[] decodedBytes = Base64.getDecoder().decode(value);
         return new String(decodedBytes, StandardCharsets.UTF_8);
     }
 
-    /** Returns whether a record has a supported completion state. */
+    /**
+     * Returns whether a record has a supported completion state.
+     *
+     * @param status serialized completion state
+     * @return {@code true} if the status is supported
+     */
     private boolean hasValidStatus(String status) {
         return status.equals("0") || status.equals("1");
     }
 
-    /** Returns whether a required task text field contains non-whitespace characters. */
+    /**
+     * Returns whether a required task text field contains non-whitespace characters.
+     *
+     * @param value required task text field
+     * @return {@code true} if the field contains non-whitespace characters
+     */
     private boolean hasText(String value) {
         return !value.isBlank();
     }
 
-    /** Atomically replaces the data file when the file system supports atomic moves. */
+    /**
+     * Atomically replaces the data file when the file system supports atomic moves.
+     *
+     * @param temporaryFile temporary file containing the new task data
+     * @param destination data file to replace
+     * @throws IOException if the data file cannot be replaced
+     */
     private void replaceDataFile(Path temporaryFile, Path destination) throws IOException {
         try {
             Files.move(temporaryFile, destination, StandardCopyOption.ATOMIC_MOVE,

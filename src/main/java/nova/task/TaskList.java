@@ -17,17 +17,31 @@ public class TaskList {
         private final int taskNumber;
         private final Task task;
 
+        /**
+         * Creates a numbered task at the given one-based position.
+         *
+         * @param taskNumber one-based position in the task list
+         * @param task task at that position
+         */
         NumberedTask(int taskNumber, Task task) {
             this.taskNumber = taskNumber;
             this.task = task;
         }
 
-        /** Returns this task's one-based position in the task list. */
+        /**
+         * Returns this task's one-based position in the task list.
+         *
+         * @return one-based task number
+         */
         public int getTaskNumber() {
             return taskNumber;
         }
 
-        /** Returns the numbered task. */
+        /**
+         * Returns the numbered task.
+         *
+         * @return task associated with the task number
+         */
         public Task getTask() {
             return task;
         }
@@ -56,7 +70,11 @@ public class TaskList {
         return List.copyOf(tasks);
     }
 
-    /** Returns the number of tasks in the list. */
+    /**
+     * Returns the number of tasks in the list.
+     *
+     * @return task count
+     */
     public int size() {
         return tasks.size();
     }
@@ -136,7 +154,13 @@ public class TaskList {
         return matchingTasks;
     }
 
-    /** Returns the zero-based index for a valid task number. */
+    /**
+     * Returns the zero-based index for a valid task number.
+     *
+     * @param taskNumber one-based task number
+     * @return zero-based index of the task
+     * @throws NovaException if the task number does not exist
+     */
     private int getTaskIndex(int taskNumber) throws NovaException {
         int taskIndex = taskNumber - 1;
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
@@ -145,7 +169,12 @@ public class TaskList {
         return taskIndex;
     }
 
-    /** Sets a task's completion state. */
+    /**
+     * Sets a task's completion state.
+     *
+     * @param task task to update
+     * @param shouldMark whether the task should be marked as completed
+     */
     private void setMarked(Task task, boolean shouldMark) {
         if (shouldMark) {
             task.markAsDone();
