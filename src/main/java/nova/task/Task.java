@@ -7,7 +7,10 @@ import java.util.Base64;
  * Represents the common description and completion state shared by all tasks.
  */
 public class Task {
+    /** Description displayed to the user and stored in the data file. */
     protected String description;
+
+    /** Completion state of this task. */
     protected boolean isDone;
 
     /**
@@ -43,12 +46,20 @@ public class Task {
         isDone = false;
     }
 
-    /** Returns whether this task is completed. */
+    /**
+     * Returns whether this task is completed.
+     *
+     * @return {@code true} if this task is completed
+     */
     public boolean isDone() {
         return isDone;
     }
 
-    /** Returns this task's completion state in the data-file format. */
+    /**
+     * Returns this task's completion state in the data-file format.
+     *
+     * @return {@code 1} if this task is done, or {@code 0} otherwise
+     */
     protected String getDataStatus() {
         return isDone ? "1" : "0";
     }
@@ -62,7 +73,12 @@ public class Task {
         return "V2 | T | " + getDataStatus() + " | " + encodeDataField(description);
     }
 
-    /** Returns a text field encoded safely for storage in a delimited record. */
+    /**
+     * Returns a text field encoded safely for storage in a delimited record.
+     *
+     * @param value text field to encode
+     * @return Base64-encoded text field
+     */
     protected String encodeDataField(String value) {
         return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
     }

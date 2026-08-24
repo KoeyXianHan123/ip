@@ -33,12 +33,22 @@ public class Deadline extends Task {
         return by.equals(date);
     }
 
+    /**
+     * Returns this deadline in the data-file format.
+     *
+     * @return serialized deadline
+     */
     @Override
     public String toDataString() {
         return "V2 | D | " + getDataStatus() + " | " + encodeDataField(description)
                 + " | " + encodeDataField(by.toString());
     }
 
+    /**
+     * Returns this deadline in its display format.
+     *
+     * @return formatted deadline
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by.format(DISPLAY_DATE_FORMAT) + ")";
