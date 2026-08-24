@@ -59,6 +59,10 @@ When adding a feature or command, identify its invalid-input and failure cases, 
 
 ## Git
 
+Before proposing, reviewing, or creating any commit or commit message, invoke the project-specific
+`$seedu-git-standard` skill and follow it. Also invoke it when naming a branch. Do not consider a commit ready
+until its message complies with that skill.
+
 Use lightweight tags unless the user requests an annotated tag.
 Every proposed or created commit message must have a well-written subject line that:
 
