@@ -19,10 +19,10 @@ public abstract class Command {
     /**
      * Executes this command.
      *
-     * @param tasks task list to inspect or update
-     * @param ui UI used to display the result
-     * @throws NovaException if the command cannot be applied to the task list
-     * @throws IOException if a task-list change cannot be saved
+     * @param tasks task list to inspect or update.
+     * @param ui UI used to display the result.
+     * @throws NovaException if the command cannot be applied to the task list.
+     * @throws IOException if a task-list change cannot be saved.
      */
     public abstract void execute(TaskList tasks, Ui ui) throws NovaException, IOException;
 

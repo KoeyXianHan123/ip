@@ -30,6 +30,10 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 
 ## Java coding standard
 
+For every Java code creation, change, review, or documentation task, invoke the project-specific
+`$seedu-java-coding-standard` skill and follow it. Do not consider Java work complete until the modified code
+complies with that skill.
+
 Follow the [SE-EDU Java coding standard (basic + intermediate)](https://se-education.org/guides/conventions/java/intermediate.html). In particular:
 
 * Use lowercase package names. Use PascalCase noun names for classes and enums, camelCase verb names for methods, camelCase names for variables, and SCREAMING_SNAKE_CASE names for constants. Write names in English, treat acronyms as words (for example, `exportHtmlSource`), name booleans to read as boolean expressions (prefer prefixes such as `is`, `has`, or `can`), and use plural names for collections.
@@ -54,6 +58,10 @@ After every update to source code:
 When adding a feature or command, identify its invalid-input and failure cases, implement clear error handling for them, and add corresponding negative test cases to `test/ui-test-plan.md` as needed. Negative tests must verify both the error message and that the chatbot remains in a valid state afterward.
 
 ## Git
+
+Before proposing, reviewing, or creating any commit or commit message, invoke the project-specific
+`$seedu-git-standard` skill and follow it. Also invoke it when naming a branch. Do not consider a commit ready
+until its message complies with that skill.
 
 Use lightweight tags unless the user requests an annotated tag.
 Every proposed or created commit message must have a well-written subject line that:

@@ -28,9 +28,9 @@ public class Parser {
     /**
      * Parses user input into a command and validates its arguments.
      *
-     * @param input raw user input
-     * @return parsed command
-     * @throws NovaException if the command or its arguments are invalid
+     * @param input raw user input.
+     * @return parsed command.
+     * @throws NovaException if the command or its arguments are invalid.
      */
     public Command parse(String input) throws NovaException {
         if (input.equals("bye")) {
