@@ -22,9 +22,9 @@ public class Nova {
     /**
      * Creates a Nova application with its collaborating components.
      *
-     * @param storage storage used to load and save tasks
-     * @param ui UI used for console interaction
-     * @param parser parser used to interpret commands
+     * @param storage storage used to load and save tasks.
+     * @param ui UI used for console interaction.
+     * @param parser parser used to interpret commands.
      */
     public Nova(Storage storage, Ui ui, Parser parser) {
         this.storage = storage;
@@ -35,7 +35,7 @@ public class Nova {
     /**
      * Greets the user, stores tasks, lists stored tasks, and exits when the user enters {@code bye}.
      *
-     * @param args command-line arguments; not used
+     * @param args command-line arguments; not used.
      */
     public static void main(String[] args) {
         Storage storage = new Storage(Path.of("data", "nova.txt"));

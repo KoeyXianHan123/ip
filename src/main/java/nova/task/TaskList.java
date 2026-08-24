@@ -39,8 +39,8 @@ public class TaskList {
     /**
      * Creates a task list containing tasks loaded from storage.
      *
-     * @param tasks initially loaded tasks
-     * @param storage storage used to persist task-list changes
+     * @param tasks initially loaded tasks.
+     * @param storage storage used to persist task-list changes.
      */
     public TaskList(List<Task> tasks, Storage storage) {
         this.tasks = new ArrayList<>(tasks);
@@ -50,7 +50,7 @@ public class TaskList {
     /**
      * Returns an unmodifiable snapshot of all tasks.
      *
-     * @return current tasks
+     * @return current tasks.
      */
     public List<Task> getTasks() {
         return List.copyOf(tasks);
@@ -64,8 +64,8 @@ public class TaskList {
     /**
      * Adds and saves a task, restoring the list if saving fails.
      *
-     * @param task task to add
-     * @throws IOException if the updated list cannot be saved
+     * @param task task to add.
+     * @throws IOException if the updated list cannot be saved.
      */
     public void add(Task task) throws IOException {
         tasks.add(task);
@@ -80,10 +80,10 @@ public class TaskList {
     /**
      * Deletes and saves a numbered task, restoring the list if saving fails.
      *
-     * @param taskNumber one-based task number
-     * @return deleted task
-     * @throws NovaException if the task number does not exist
-     * @throws IOException if the updated list cannot be saved
+     * @param taskNumber one-based task number.
+     * @return deleted task.
+     * @throws NovaException if the task number does not exist.
+     * @throws IOException if the updated list cannot be saved.
      */
     public Task delete(int taskNumber) throws NovaException, IOException {
         int taskIndex = getTaskIndex(taskNumber);
@@ -100,11 +100,11 @@ public class TaskList {
     /**
      * Changes and saves a task's completion state, restoring it if saving fails.
      *
-     * @param taskNumber one-based task number
-     * @param shouldMark whether the task should be marked as done
-     * @return updated task
-     * @throws NovaException if the task number does not exist
-     * @throws IOException if the updated list cannot be saved
+     * @param taskNumber one-based task number.
+     * @param shouldMark whether the task should be marked as done.
+     * @return updated task.
+     * @throws NovaException if the task number does not exist.
+     * @throws IOException if the updated list cannot be saved.
      */
     public Task setMarked(int taskNumber, boolean shouldMark) throws NovaException, IOException {
         Task task = tasks.get(getTaskIndex(taskNumber));
@@ -122,8 +122,8 @@ public class TaskList {
     /**
      * Returns numbered deadlines that fall on the given date.
      *
-     * @param date date to search
-     * @return matching deadlines with their task-list numbers
+     * @param date date to search.
+     * @return matching deadlines with their task-list numbers.
      */
     public List<NumberedTask> getDeadlinesOn(LocalDate date) {
         List<NumberedTask> matchingTasks = new ArrayList<>();

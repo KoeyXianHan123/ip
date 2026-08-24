@@ -28,7 +28,7 @@ public class Storage {
     /**
      * Creates storage that writes tasks to the given path.
      *
-     * @param filePath relative or absolute path of the data file
+     * @param filePath relative or absolute path of the data file.
      */
     public Storage(Path filePath) {
         this.filePath = filePath;
@@ -38,8 +38,8 @@ public class Storage {
      * Loads tasks from the data file.
      * Returns an empty list when the data file does not exist and skips malformed records.
      *
-     * @return tasks stored in the data file
-     * @throws IOException if an existing data file cannot be read
+     * @return tasks stored in the data file.
+     * @throws IOException if an existing data file cannot be read.
      */
     public List<Task> load() throws IOException {
         List<Task> tasks = new ArrayList<>();
@@ -72,8 +72,8 @@ public class Storage {
      * Replaces the data file contents with the current task list.
      * Creates the parent directory and file when they do not exist.
      *
-     * @param tasks current task list
-     * @throws IOException if the tasks cannot be written
+     * @param tasks current task list.
+     * @throws IOException if the tasks cannot be written.
      */
     public void save(List<Task> tasks) throws IOException {
         Path absoluteFilePath = filePath.toAbsolutePath();

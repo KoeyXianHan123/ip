@@ -15,8 +15,8 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete deadline.
      *
-     * @param description description of the deadline
-     * @param by date by which the task should be completed
+     * @param description description of the deadline.
+     * @param by date by which the task should be completed.
      */
     public Deadline(String description, LocalDate by) {
         super(description);
@@ -26,8 +26,8 @@ public class Deadline extends Task {
     /**
      * Returns whether this deadline falls on the given date.
      *
-     * @param date date to compare with this deadline
-     * @return {@code true} if this deadline falls on the date
+     * @param date date to compare with this deadline.
+     * @return {@code true} if this deadline falls on the date.
      */
     public boolean isDueOn(LocalDate date) {
         return by.equals(date);

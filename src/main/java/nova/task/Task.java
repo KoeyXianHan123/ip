@@ -13,7 +13,7 @@ public class Task {
     /**
      * Creates an incomplete task with the given description.
      *
-     * @param description description of the task
+     * @param description description of the task.
      */
     public Task(String description) {
         this.description = description;
@@ -23,7 +23,7 @@ public class Task {
     /**
      * Returns the icon used to show the task's completion status.
      *
-     * @return {@code X} if the task is done, or a space otherwise
+     * @return {@code X} if the task is done, or a space otherwise.
      */
     public String getStatusIcon() {
         return isDone ? "X" : " ";
@@ -56,7 +56,7 @@ public class Task {
     /**
      * Returns this task in the format used by the data file.
      *
-     * @return serialized task
+     * @return serialized task.
      */
     public String toDataString() {
         return "V2 | T | " + getDataStatus() + " | " + encodeDataField(description);
@@ -70,7 +70,7 @@ public class Task {
     /**
      * Returns the task in its display format, including its status icon.
      *
-     * @return formatted task
+     * @return formatted task.
      */
     @Override
     public String toString() {
