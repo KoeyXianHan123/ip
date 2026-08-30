@@ -40,7 +40,10 @@ def main():
     if version.returncode or not version_text.startswith("javac 25"):
         print(f"TEST SESSION FAILED: Java 25 required; found {version_text or 'no javac'}")
         return 1
-    sources = sorted((root / "src" / "main" / "java").rglob("*.java"))
+    sources = sorted(
+        source for source in (root / "src" / "main" / "java").rglob("*.java")
+        if "gui" not in source.parts and source.name != "Launcher.java"
+    )
     with tempfile.TemporaryDirectory(prefix="nova-ui-test-") as classes:
         compiled = execute(["javac", "-d", classes, *map(str, sources)])
         if compiled.returncode:

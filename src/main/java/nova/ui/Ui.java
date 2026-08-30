@@ -1,5 +1,7 @@
 package nova.ui;
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
@@ -12,13 +14,25 @@ import nova.task.Task;
 public class Ui {
     private static final String DIVIDER = "____________________________________________________________";
 
+    private final PrintStream output;
     private final Scanner scanner;
 
     /**
      * Creates a UI that reads from standard input.
      */
     public Ui() {
-        scanner = new Scanner(System.in);
+        this(System.in, System.out);
+    }
+
+    /**
+     * Creates a UI using the given input and output streams.
+     *
+     * @param input source of console commands
+     * @param output destination for displayed messages
+     */
+    public Ui(InputStream input, PrintStream output) {
+        scanner = new Scanner(input);
+        this.output = output;
     }
 
     /** Displays Nova's greeting. */
@@ -28,10 +42,15 @@ public class Ui {
                 + "|  \\| |/ _ \\ \\ / / _` |\n"
                 + "| |\\  | (_) \\ V / (_| |\n"
                 + "|_| \\_|\\___/ \\_/ \\__,_|\n";
-        System.out.println(banner);
-        System.out.println("Hello! I'm Nova.");
-        System.out.println("What can I do for you?");
+        output.println(banner);
+        showGuiWelcome();
         showDivider();
+    }
+
+    /** Displays Nova's greeting without the console banner or divider. */
+    public void showGuiWelcome() {
+        output.println("Hello! I'm Nova.");
+        output.println("What can I do for you?");
     }
 
     /**
@@ -54,12 +73,12 @@ public class Ui {
 
     /** Displays the divider between command responses. */
     public void showDivider() {
-        System.out.println(DIVIDER);
+        output.println(DIVIDER);
     }
 
     /** Displays Nova's farewell. */
     public void showGoodbye() {
-        System.out.println(" Bye. Hope to see you again soon!");
+        output.println(" Bye. Hope to see you again soon!");
     }
 
     /**
@@ -68,7 +87,7 @@ public class Ui {
      * @param message explanation of the error
      */
     public void showError(String message) {
-        System.out.println(" OOPS!!! " + message);
+        output.println(" OOPS!!! " + message);
     }
 
     /**
@@ -77,7 +96,7 @@ public class Ui {
      * @param skippedRecordCount number of corrupted records skipped
      */
     public void showSkippedRecords(int skippedRecordCount) {
-        System.out.println(" OOPS!!! I skipped " + skippedRecordCount
+        output.println(" OOPS!!! I skipped " + skippedRecordCount
                 + " corrupted task record(s) in the data file.");
     }
 
@@ -87,9 +106,9 @@ public class Ui {
      * @param tasks tasks to display
      */
     public void showTasks(List<Task> tasks) {
-        System.out.println(" Here are the tasks in your list:");
+        output.println(" Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println(" " + (i + 1) + "." + tasks.get(i));
+            output.println(" " + (i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -99,9 +118,9 @@ public class Ui {
      * @param matchingTasks matching tasks to display.
      */
     public void showMatchingTasks(List<Task> matchingTasks) {
-        System.out.println(" Here are the matching tasks in your list:");
+        output.println(" Here are the matching tasks in your list:");
         for (int i = 0; i < matchingTasks.size(); i++) {
-            System.out.println(" " + (i + 1) + "." + matchingTasks.get(i));
+            output.println(" " + (i + 1) + "." + matchingTasks.get(i));
         }
     }
 
@@ -113,11 +132,11 @@ public class Ui {
      */
     public void showMarkedTask(Task task, boolean isMarked) {
         if (isMarked) {
-            System.out.println(" Nice! I've marked this task as done:");
+            output.println(" Nice! I've marked this task as done:");
         } else {
-            System.out.println(" OK, I've marked this task as not done yet:");
+            output.println(" OK, I've marked this task as not done yet:");
         }
-        System.out.println("  " + task);
+        output.println("  " + task);
     }
 
     /**
@@ -127,9 +146,9 @@ public class Ui {
      * @param taskCount number of tasks remaining
      */
     public void showDeletedTask(Task task, int taskCount) {
-        System.out.println(" Noted. I've removed this task:");
-        System.out.println("  " + task);
-        System.out.println(" Now you have " + taskCount + " tasks in the list.");
+        output.println(" Noted. I've removed this task:");
+        output.println("  " + task);
+        output.println(" Now you have " + taskCount + " tasks in the list.");
     }
 
     /**
@@ -139,9 +158,9 @@ public class Ui {
      * @param taskCount number of tasks after the addition
      */
     public void showAddedTask(Task task, int taskCount) {
-        System.out.println(" Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println(" Now you have " + taskCount + " tasks in the list.");
+        output.println(" Got it. I've added this task:");
+        output.println("  " + task);
+        output.println(" Now you have " + taskCount + " tasks in the list.");
     }
 
     /**
@@ -150,7 +169,7 @@ public class Ui {
      * @param date date whose deadlines will be displayed
      */
     public void showDeadlinesOn(LocalDate date) {
-        System.out.println(" Here are the deadlines on " + date + ":");
+        output.println(" Here are the deadlines on " + date + ":");
     }
 
     /**
@@ -160,6 +179,6 @@ public class Ui {
      * @param task task to display
      */
     public void showNumberedTask(int taskNumber, Task task) {
-        System.out.println(" " + taskNumber + "." + task);
+        output.println(" " + taskNumber + "." + task);
     }
 }
