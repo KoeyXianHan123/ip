@@ -49,8 +49,9 @@ public class Ui {
 
     /** Displays Nova's greeting without the console banner or divider. */
     public void showGuiWelcome() {
-        output.println("Hello! I'm Nova.");
-        output.println("What can I do for you?");
+        showLines(
+                "Hello! I'm Nova.",
+                "What can I do for you?");
     }
 
     /**
@@ -131,12 +132,10 @@ public class Ui {
      * @param isMarked whether the task is now completed
      */
     public void showMarkedTask(Task task, boolean isMarked) {
-        if (isMarked) {
-            output.println(" Nice! I've marked this task as done:");
-        } else {
-            output.println(" OK, I've marked this task as not done yet:");
-        }
-        output.println("  " + task);
+        String message = isMarked
+                ? " Nice! I've marked this task as done:"
+                : " OK, I've marked this task as not done yet:";
+        showLines(message, "  " + task);
     }
 
     /**
@@ -146,9 +145,10 @@ public class Ui {
      * @param taskCount number of tasks remaining
      */
     public void showDeletedTask(Task task, int taskCount) {
-        output.println(" Noted. I've removed this task:");
-        output.println("  " + task);
-        output.println(" Now you have " + taskCount + " tasks in the list.");
+        showLines(
+                " Noted. I've removed this task:",
+                "  " + task,
+                " Now you have " + taskCount + " tasks in the list.");
     }
 
     /**
@@ -158,9 +158,10 @@ public class Ui {
      * @param taskCount number of tasks after the addition
      */
     public void showAddedTask(Task task, int taskCount) {
-        output.println(" Got it. I've added this task:");
-        output.println("  " + task);
-        output.println(" Now you have " + taskCount + " tasks in the list.");
+        showLines(
+                " Got it. I've added this task:",
+                "  " + task,
+                " Now you have " + taskCount + " tasks in the list.");
     }
 
     /**
@@ -180,5 +181,12 @@ public class Ui {
      */
     public void showNumberedTask(int taskNumber, Task task) {
         output.println(" " + taskNumber + "." + task);
+    }
+
+    /** Displays each supplied line in order. */
+    private void showLines(String... lines) {
+        for (String line : lines) {
+            output.println(line);
+        }
     }
 }
