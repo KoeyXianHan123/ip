@@ -138,6 +138,20 @@ public class TaskList {
     }
 
     /**
+     * Sets a task's completion state.
+     *
+     * @param task task to update
+     * @param shouldMark whether the task should be marked as completed
+     */
+    private void setMarked(Task task, boolean shouldMark) {
+        if (shouldMark) {
+            task.markAsDone();
+        } else {
+            task.markAsNotDone();
+        }
+    }
+
+    /**
      * Returns numbered deadlines that fall on the given date.
      *
      * @param date date to search.
@@ -185,17 +199,4 @@ public class TaskList {
         return taskIndex;
     }
 
-    /**
-     * Sets a task's completion state.
-     *
-     * @param task task to update
-     * @param shouldMark whether the task should be marked as completed
-     */
-    private void setMarked(Task task, boolean shouldMark) {
-        if (shouldMark) {
-            task.markAsDone();
-        } else {
-            task.markAsNotDone();
-        }
-    }
 }
