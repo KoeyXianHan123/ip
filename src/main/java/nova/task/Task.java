@@ -7,10 +7,14 @@ import java.util.Base64;
  * Represents the common description and completion state shared by all tasks.
  */
 public class Task {
-    /** Description displayed to the user and stored in the data file. */
+    /**
+     * Description displayed to the user and stored in the data file.
+     */
     protected String description;
 
-    /** Completion state of this task. */
+    /**
+     * Completion state of this task.
+     */
     protected boolean isDone;
 
     /**

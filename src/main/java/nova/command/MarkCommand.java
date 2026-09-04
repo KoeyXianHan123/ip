@@ -35,7 +35,7 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui) throws NovaException, IOException {
-        Task task = tasks.setMarked(taskNumber, shouldMark);
+        Task task = shouldMark ? tasks.mark(taskNumber) : tasks.unmark(taskNumber);
         ui.showMarkedTask(task, shouldMark);
     }
 }

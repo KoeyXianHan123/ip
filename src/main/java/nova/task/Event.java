@@ -4,10 +4,14 @@ package nova.task;
  * Represents a task that takes place between specified start and end times.
  */
 public class Event extends Task {
-    /** Start date or time displayed for this event. */
+    /**
+     * Start date or time displayed for this event.
+     */
     protected String from;
 
-    /** End date or time displayed for this event. */
+    /**
+     * End date or time displayed for this event.
+     */
     protected String to;
 
     /**

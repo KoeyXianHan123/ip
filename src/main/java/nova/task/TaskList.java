@@ -12,7 +12,9 @@ import nova.storage.Storage;
  * Owns Nova's tasks and manages operations that inspect or change them.
  */
 public class TaskList {
-    /** Associates a task with its one-based position in the task list. */
+    /**
+     * Associates a task with its one-based position in the task list.
+     */
     public static class NumberedTask {
         private final int taskNumber;
         private final Task task;
@@ -116,22 +118,46 @@ public class TaskList {
     }
 
     /**
-     * Changes and saves a task's completion state, restoring it if saving fails.
+     * Marks and saves a task as completed, restoring it if saving fails.
      *
      * @param taskNumber one-based task number.
-     * @param shouldMark whether the task should be marked as done.
      * @return updated task.
      * @throws NovaException if the task number does not exist.
      * @throws IOException if the updated list cannot be saved.
      */
-    public Task setMarked(int taskNumber, boolean shouldMark) throws NovaException, IOException {
+    public Task mark(int taskNumber) throws NovaException, IOException {
+        return updateCompletionState(taskNumber, true);
+    }
+
+    /**
+     * Marks and saves a task as not completed, restoring it if saving fails.
+     *
+     * @param taskNumber one-based task number.
+     * @return updated task.
+     * @throws NovaException if the task number does not exist.
+     * @throws IOException if the updated list cannot be saved.
+     */
+    public Task unmark(int taskNumber) throws NovaException, IOException {
+        return updateCompletionState(taskNumber, false);
+    }
+
+    /**
+     * Changes and saves a task's completion state, restoring it if saving fails.
+     *
+     * @param taskNumber one-based task number
+     * @param shouldMark whether the task should be marked as done
+     * @return updated task
+     * @throws NovaException if the task number does not exist
+     * @throws IOException if the updated list cannot be saved
+     */
+    private Task updateCompletionState(int taskNumber, boolean shouldMark) throws NovaException, IOException {
         Task task = tasks.get(getTaskIndex(taskNumber));
         boolean wasDone = task.isDone();
-        setMarked(task, shouldMark);
+        updateCompletionState(task, shouldMark);
         try {
             storage.save(tasks);
         } catch (IOException exception) {
-            setMarked(task, wasDone);
+            updateCompletionState(task, wasDone);
             throw exception;
         }
         return task;
@@ -143,7 +169,7 @@ public class TaskList {
      * @param task task to update
      * @param shouldMark whether the task should be marked as completed
      */
-    private void setMarked(Task task, boolean shouldMark) {
+    private void updateCompletionState(Task task, boolean shouldMark) {
         if (shouldMark) {
             task.markAsDone();
         } else {

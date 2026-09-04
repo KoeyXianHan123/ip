@@ -23,7 +23,9 @@ public class MainWindow extends AnchorPane {
 
     private Nova nova;
 
-    /** Keeps the newest dialog visible when the conversation grows. */
+    /**
+     * Keeps the newest dialog visible when the conversation grows.
+     */
     @FXML
     public void initialize() {
         dialogContainer.heightProperty().addListener(observable -> scrollPane.setVvalue(1.0));
@@ -39,7 +41,9 @@ public class MainWindow extends AnchorPane {
         dialogContainer.getChildren().add(DialogBox.getNovaDialog(nova.startGui()));
     }
 
-    /** Adds the user's input and Nova's response to the conversation. */
+    /**
+     * Adds the user's input and Nova's response to the conversation.
+     */
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();

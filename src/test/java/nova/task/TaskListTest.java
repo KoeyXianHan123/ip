@@ -87,31 +87,31 @@ class TaskListTest {
     }
 
     @Test
-    void setMarked_markAndUnmark_updatesAndSavesTask() throws Exception {
+    void markAndUnmark_validTask_updatesAndSavesTask() throws Exception {
         RecordingStorage storage = new RecordingStorage();
         Todo task = new Todo("read book");
         TaskList taskList = new TaskList(List.of(task), storage);
 
-        assertSame(task, taskList.setMarked(1, true));
+        assertSame(task, taskList.mark(1));
         assertTrue(task.isDone());
-        assertSame(task, taskList.setMarked(1, false));
+        assertSame(task, taskList.unmark(1));
         assertFalse(task.isDone());
         assertEquals(2, storage.saveCount);
     }
 
     @Test
-    void setMarked_taskNumberOutsideList_throwsNovaExceptionWithoutSaving() {
+    void markAndUnmark_taskNumberOutsideList_throwsNovaExceptionWithoutSaving() {
         RecordingStorage storage = new RecordingStorage();
         TaskList taskList = new TaskList(List.of(new Todo("read book")), storage);
 
-        assertThrows(NovaException.class, () -> taskList.setMarked(0, true));
-        assertThrows(NovaException.class, () -> taskList.setMarked(2, true));
+        assertThrows(NovaException.class, () -> taskList.mark(0));
+        assertThrows(NovaException.class, () -> taskList.unmark(2));
 
         assertEquals(0, storage.saveCount);
     }
 
     @Test
-    void setMarked_saveFails_restoresOriginalCompletionState() {
+    void markAndUnmark_saveFails_restoresOriginalCompletionState() {
         RecordingStorage storage = new RecordingStorage();
         storage.shouldFail = true;
         Todo incompleteTask = new Todo("read book");
@@ -119,8 +119,8 @@ class TaskListTest {
         completedTask.markAsDone();
         TaskList taskList = new TaskList(List.of(incompleteTask, completedTask), storage);
 
-        assertThrows(IOException.class, () -> taskList.setMarked(1, true));
-        assertThrows(IOException.class, () -> taskList.setMarked(2, false));
+        assertThrows(IOException.class, () -> taskList.mark(1));
+        assertThrows(IOException.class, () -> taskList.unmark(2));
 
         assertFalse(incompleteTask.isDone());
         assertTrue(completedTask.isDone());

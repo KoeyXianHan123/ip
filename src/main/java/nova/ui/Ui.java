@@ -35,7 +35,9 @@ public class Ui {
         this.output = output;
     }
 
-    /** Displays Nova's greeting. */
+    /**
+     * Displays Nova's greeting.
+     */
     public void showWelcome() {
         String banner = " _   _                  \n"
                 + "| \\ | | _____   ____ _ \n"
@@ -47,7 +49,9 @@ public class Ui {
         showDivider();
     }
 
-    /** Displays Nova's greeting without the console banner or divider. */
+    /**
+     * Displays Nova's greeting without the console banner or divider.
+     */
     public void showGuiWelcome() {
         showLines(
                 "Hello! I'm Nova.",
@@ -72,12 +76,16 @@ public class Ui {
         return scanner.nextLine();
     }
 
-    /** Displays the divider between command responses. */
+    /**
+     * Displays the divider between command responses.
+     */
     public void showDivider() {
         output.println(DIVIDER);
     }
 
-    /** Displays Nova's farewell. */
+    /**
+     * Displays Nova's farewell.
+     */
     public void showGoodbye() {
         output.println(" Bye. Hope to see you again soon!");
     }
@@ -183,7 +191,9 @@ public class Ui {
         output.println(" " + taskNumber + "." + task);
     }
 
-    /** Displays each supplied line in order. */
+    /**
+     * Displays each supplied line in order.
+     */
     private void showLines(String... lines) {
         for (String line : lines) {
             output.println(line);

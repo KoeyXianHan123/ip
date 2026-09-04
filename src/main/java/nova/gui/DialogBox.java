@@ -56,12 +56,14 @@ public class DialogBox extends HBox {
         DialogBox dialogBox = new DialogBox(text);
         dialogBox.avatar.setText("N");
         dialogBox.getStyleClass().add("nova-dialog");
-        dialogBox.flip();
+        dialogBox.placeAvatarOnLeft();
         return dialogBox;
     }
 
-    /** Places the avatar on the left for Nova responses. */
-    private void flip() {
+    /**
+     * Places the avatar on the left for Nova responses.
+     */
+    private void placeAvatarOnLeft() {
         ObservableList<Node> children = FXCollections.observableArrayList(getChildren());
         Collections.reverse(children);
         getChildren().setAll(children);

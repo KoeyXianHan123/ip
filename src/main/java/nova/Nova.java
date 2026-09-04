@@ -27,7 +27,9 @@ public class Nova {
     private TaskList tasks;
     private boolean isExitRequested;
 
-    /** Creates Nova using its default data file and console collaborators. */
+    /**
+     * Creates Nova using its default data file and console collaborators.
+     */
     public Nova() {
         this(new Storage(DEFAULT_FILE_PATH), new Ui(), new Parser());
     }
@@ -54,7 +56,9 @@ public class Nova {
         new Nova().run();
     }
 
-    /** Starts Nova's command loop. */
+    /**
+     * Starts Nova's command loop.
+     */
     public void run() {
         ui.showWelcome();
         initializeTasks(ui);
@@ -105,7 +109,9 @@ public class Nova {
         return isExitRequested;
     }
 
-    /** Loads saved tasks once and reports recoverable loading problems through the given UI. */
+    /**
+     * Loads saved tasks once and reports recoverable loading problems through the given UI.
+     */
     private void initializeTasks(Ui outputUi) {
         if (tasks != null) {
             return;
@@ -121,7 +127,9 @@ public class Nova {
         }
     }
 
-    /** Executes one command and reports parsing or storage errors through the given UI. */
+    /**
+     * Executes one command and reports parsing or storage errors through the given UI.
+     */
     private void executeCommand(String input, Ui outputUi) {
         isExitRequested = false;
         try {
@@ -135,7 +143,9 @@ public class Nova {
         }
     }
 
-    /** Returns a UI that captures one response in memory. */
+    /**
+     * Returns a UI that captures one response in memory.
+     */
     private Ui createResponseUi(ByteArrayOutputStream outputBytes) {
         PrintStream output = new PrintStream(outputBytes, true, StandardCharsets.UTF_8);
         return new Ui(InputStream.nullInputStream(), output);
