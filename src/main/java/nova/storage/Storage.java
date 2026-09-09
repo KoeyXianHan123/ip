@@ -154,6 +154,8 @@ public class Storage {
      * @return parsed task, or {@code null} if the record shape is invalid
      */
     private Task createTask(String type, String status, String[] fields, int textStart) {
+        assert hasValidStatus(status) : "Task creation requires a validated completion status";
+
         Task task;
         switch (type) {
             case "T":

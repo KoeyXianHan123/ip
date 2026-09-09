@@ -89,6 +89,9 @@ public class Parser {
      * @throws NovaException if the command does not contain an integer task number
      */
     private int parseTaskNumber(String input, String commandWord) throws NovaException {
+        assert isCommand(input, commandWord)
+                : "Numbered-command parser must receive the matching command";
+
         String taskNumberText = input.substring(commandWord.length()).trim();
         try {
             return Integer.parseInt(taskNumberText);

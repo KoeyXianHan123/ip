@@ -131,6 +131,8 @@ public class Nova {
      * Executes one command and reports parsing or storage errors through the given UI.
      */
     private void executeCommand(String input, Ui outputUi) {
+        assert tasks != null : "Task list must be initialized before executing commands";
+
         isExitRequested = false;
         try {
             Command command = parser.parse(input);
