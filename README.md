@@ -13,7 +13,11 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/nova/Nova.java` file, right-click it, and choose `Run Nova.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
+1. To run the console interface, locate `src/main/java/nova/Nova.java`, right-click it, and choose
+   `Run Nova.main()`. To run the JavaFX graphical interface instead, locate
+   `src/main/java/nova/Launcher.java`, right-click it, and choose `Run Launcher.main()`. If the code editor is
+   showing compile errors, try restarting the IDE. If the console setup is correct, you should see something
+   like the output below:
    ```
     _   _                  
    | \ | | _____   ____ _ 
@@ -41,6 +45,8 @@ Run the JAR from the project root with Java 25:
 ```powershell
 java -jar build/libs/nova.jar
 ```
+
+The packaged JAR starts Nova's JavaFX graphical interface.
 
 Nova stores its data relative to the directory from which the JAR is run. Running it from the project root
 keeps the data file at `data/nova.txt`.
