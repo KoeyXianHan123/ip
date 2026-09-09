@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import nova.exception.NovaException;
 import nova.storage.Storage;
@@ -198,11 +199,12 @@ public class TaskList {
      * Returns tasks whose descriptions contain the given keyword.
      *
      * @param keyword keyword to search for.
-     * @return matching tasks in task-list order.
+     * @return matching tasks with their task-list numbers in task-list order.
      */
-    public List<Task> findTasks(String keyword) {
-        return tasks.stream()
-                .filter(task -> task.description.contains(keyword))
+    public List<NumberedTask> findTasks(String keyword) {
+        return IntStream.range(0, tasks.size())
+                .filter(index -> tasks.get(index).description.contains(keyword))
+                .mapToObj(index -> new NumberedTask(index + 1, tasks.get(index)))
                 .toList();
     }
 

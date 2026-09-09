@@ -183,7 +183,15 @@ class TaskListTest {
                 secondMatch,
                 thirdMatch), UNUSED_STORAGE);
 
-        assertEquals(List.of(firstMatch, secondMatch, thirdMatch), taskList.findTasks("book"));
+        List<NumberedTask> matches = taskList.findTasks("book");
+
+        assertEquals(3, matches.size());
+        assertEquals(1, matches.get(0).getTaskNumber());
+        assertSame(firstMatch, matches.get(0).getTask());
+        assertEquals(3, matches.get(1).getTaskNumber());
+        assertSame(secondMatch, matches.get(1).getTask());
+        assertEquals(4, matches.get(2).getTaskNumber());
+        assertSame(thirdMatch, matches.get(2).getTask());
     }
 
     @Test

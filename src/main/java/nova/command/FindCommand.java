@@ -2,8 +2,8 @@ package nova.command;
 
 import java.util.List;
 
-import nova.task.Task;
 import nova.task.TaskList;
+import nova.task.TaskList.NumberedTask;
 import nova.ui.Ui;
 
 /**
@@ -29,7 +29,7 @@ public class FindCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui) {
-        List<Task> matchingTasks = tasks.findTasks(keyword);
+        List<NumberedTask> matchingTasks = tasks.findTasks(keyword);
         ui.showMatchingTasks(matchingTasks);
     }
 }

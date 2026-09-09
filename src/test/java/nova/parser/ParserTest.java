@@ -26,6 +26,7 @@ import nova.exception.NovaException;
 import nova.storage.Storage;
 import nova.task.Task;
 import nova.task.TaskList;
+import nova.task.TaskList.NumberedTask;
 import nova.task.Todo;
 import nova.ui.Ui;
 
@@ -98,7 +99,9 @@ class ParserTest {
         assertInstanceOf(FindCommand.class, command);
         command.execute(taskList, ui);
 
-        assertEquals(List.of(matchingTask), ui.matchingTasks);
+        assertEquals(1, ui.matchingTasks.size());
+        assertEquals(1, ui.matchingTasks.get(0).getTaskNumber());
+        assertEquals(matchingTask, ui.matchingTasks.get(0).getTask());
     }
 
     @Test
@@ -199,7 +202,7 @@ class ParserTest {
 
     private static class NoOpUi extends Ui {
         private LocalDate shownDate;
-        private List<Task> matchingTasks;
+        private List<NumberedTask> matchingTasks;
 
         @Override
         public void showAddedTask(Task task, int taskCount) {
@@ -222,7 +225,7 @@ class ParserTest {
         }
 
         @Override
-        public void showMatchingTasks(List<Task> matchingTasks) {
+        public void showMatchingTasks(List<NumberedTask> matchingTasks) {
             this.matchingTasks = List.copyOf(matchingTasks);
         }
     }

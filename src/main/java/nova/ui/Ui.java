@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import nova.task.Task;
+import nova.task.TaskList.NumberedTask;
 
 /**
  * Handles console input and output for Nova.
@@ -145,10 +146,10 @@ public class Ui {
      *
      * @param matchingTasks matching tasks to display.
      */
-    public void showMatchingTasks(List<Task> matchingTasks) {
+    public void showMatchingTasks(List<NumberedTask> matchingTasks) {
         output.println(" Here are the matching tasks in your list:");
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            output.println(" " + (i + 1) + "." + matchingTasks.get(i));
+        for (NumberedTask matchingTask : matchingTasks) {
+            showNumberedTask(matchingTask.getTaskNumber(), matchingTask.getTask());
         }
     }
 
