@@ -8,6 +8,7 @@ import nova.command.Command;
 import nova.command.DeleteCommand;
 import nova.command.ExitCommand;
 import nova.command.FindCommand;
+import nova.command.HelpCommand;
 import nova.command.ListCommand;
 import nova.command.MarkCommand;
 import nova.command.MarkCommand.CompletionAction;
@@ -35,6 +36,10 @@ public class Parser {
      * @throws NovaException if the command or its arguments are invalid.
      */
     public Command parse(String input) throws NovaException {
+        if (input.equals("help")) {
+            return new HelpCommand();
+        }
+
         String commandWord = getCommandWord(input);
         switch (commandWord) {
         case "bye":

@@ -446,3 +446,61 @@ ____________________________________________________________
  Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## TC8: Display command help and reject trailing arguments
+
+Aim: Verify help displays every supported command, rejects trailing arguments, and leaves Nova usable without
+changing the task list.
+
+### Input
+
+```text
+todo read book
+help
+help extra
+list
+bye
+```
+
+### Expected output
+
+```text
+ _   _                  
+| \ | | _____   ____ _ 
+|  \| |/ _ \ \ / / _` |
+| |\  | (_) \ V / (_| |
+|_| \_|\___/ \_/ \__,_|
+
+Hello! I'm Nova.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Got it. I've added this task:
+  [T][ ] read book
+ Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+ Here are Nova's commands:
+ list
+ todo DESCRIPTION
+ deadline DESCRIPTION /by yyyy-MM-dd
+ event DESCRIPTION /from START /to END
+ mark TASK_NUMBER
+ unmark TASK_NUMBER
+ delete TASK_NUMBER
+ find KEYWORD
+ on yyyy-MM-dd
+ help
+ bye
+____________________________________________________________
+____________________________________________________________
+ OOPS!!! I'm sorry, but I don't know what that means :-(
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list:
+ 1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+ Bye. Hope to see you again soon!
+____________________________________________________________
+```

@@ -57,6 +57,26 @@ class NovaTest {
         assertTrue(nova.isExitRequested());
     }
 
+    @Test
+    void getResponse_help_returnsExactHelpWithoutSavingOrExiting() {
+        String expectedHelp = " Here are Nova's commands:\n"
+                + " list\n"
+                + " todo DESCRIPTION\n"
+                + " deadline DESCRIPTION /by yyyy-MM-dd\n"
+                + " event DESCRIPTION /from START /to END\n"
+                + " mark TASK_NUMBER\n"
+                + " unmark TASK_NUMBER\n"
+                + " delete TASK_NUMBER\n"
+                + " find KEYWORD\n"
+                + " on yyyy-MM-dd\n"
+                + " help\n"
+                + " bye";
+
+        assertEquals(expectedHelp, normalizeLineEndings(nova.getResponse("help")));
+        assertFalse(nova.isExitRequested());
+        assertFalse(temporaryDirectory.resolve("nova.txt").toFile().exists());
+    }
+
     private String normalizeLineEndings(String value) {
         return value.replace("\r\n", "\n").replace('\r', '\n');
     }

@@ -28,3 +28,24 @@ expected output
 ## Feature XYZ
 
 // Feature details
+
+## Viewing help
+
+Displays the available Nova commands and their syntax.
+
+Example: `help`
+
+```text
+ Here are Nova's commands:
+ list
+ todo DESCRIPTION
+ deadline DESCRIPTION /by yyyy-MM-dd
+ event DESCRIPTION /from START /to END
+ mark TASK_NUMBER
+ unmark TASK_NUMBER
+ delete TASK_NUMBER
+ find KEYWORD
+ on yyyy-MM-dd
+ help
+ bye
+```

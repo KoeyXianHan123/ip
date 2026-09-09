@@ -91,6 +91,25 @@ public class Ui {
     }
 
     /**
+     * Displays the available Nova commands and their syntax.
+     */
+    public void showHelp() {
+        showLines(
+                " Here are Nova's commands:",
+                " list",
+                " todo DESCRIPTION",
+                " deadline DESCRIPTION /by yyyy-MM-dd",
+                " event DESCRIPTION /from START /to END",
+                " mark TASK_NUMBER",
+                " unmark TASK_NUMBER",
+                " delete TASK_NUMBER",
+                " find KEYWORD",
+                " on yyyy-MM-dd",
+                " help",
+                " bye");
+    }
+
+    /**
      * Displays an error message.
      *
      * @param message explanation of the error
