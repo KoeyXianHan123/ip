@@ -34,39 +34,49 @@ public class Parser {
      * @throws NovaException if the command or its arguments are invalid.
      */
     public Command parse(String input) throws NovaException {
-        if (input.equals("bye")) {
-            return new ExitCommand();
-        } else if (input.equals("list")) {
-            return new ListCommand();
-        } else if (isCommand(input, "mark")) {
-            return new MarkCommand(parseTaskNumber(input, "mark"), true);
-        } else if (isCommand(input, "unmark")) {
-            return new MarkCommand(parseTaskNumber(input, "unmark"), false);
-        } else if (isCommand(input, "delete")) {
-            return new DeleteCommand(parseTaskNumber(input, "delete"));
-        } else if (isCommand(input, "find")) {
+        String commandWord = getCommandWord(input);
+        switch (commandWord) {
+        case "bye":
+            if (input.equals(commandWord)) {
+                return new ExitCommand();
+            }
+            break;
+        case "list":
+            if (input.equals(commandWord)) {
+                return new ListCommand();
+            }
+            break;
+        case "mark":
+            return new MarkCommand(parseTaskNumber(input, commandWord), true);
+        case "unmark":
+            return new MarkCommand(parseTaskNumber(input, commandWord), false);
+        case "delete":
+            return new DeleteCommand(parseTaskNumber(input, commandWord));
+        case "find":
             return parseFind(input);
-        } else if (isCommand(input, "todo")) {
+        case "todo":
             return parseTodo(input);
-        } else if (isCommand(input, "deadline")) {
+        case "deadline":
             return parseDeadline(input);
-        } else if (isCommand(input, "event")) {
+        case "event":
             return parseEvent(input);
-        } else if (isCommand(input, "on")) {
+        case "on":
             return parseDateSearch(input);
+        default:
+            break;
         }
         throw new NovaException("I'm sorry, but I don't know what that means :-(");
     }
 
     /**
-     * Returns whether the input contains the given command word.
+     * Returns the first space-delimited word in the input.
      *
      * @param input raw user input
-     * @param commandWord command word to match
-     * @return {@code true} if the input starts with the complete command word
+     * @return first word, or the entire input when it contains no spaces
      */
-    private boolean isCommand(String input, String commandWord) {
-        return input.equals(commandWord) || input.startsWith(commandWord + " ");
+    private String getCommandWord(String input) {
+        int firstSpace = input.indexOf(' ');
+        return firstSpace < 0 ? input : input.substring(0, firstSpace);
     }
 
     /**

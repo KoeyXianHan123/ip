@@ -100,9 +100,13 @@ class ParserTest {
 
     @Test
     void parse_unknownOrSimilarCommand_throwsUnknownCommandError() {
-        assertParseError("", "I'm sorry, but I don't know what that means :-(");
-        assertParseError("listing", "I'm sorry, but I don't know what that means :-(");
-        assertParseError("TODO read book", "I'm sorry, but I don't know what that means :-(");
+        String unknownCommandError = "I'm sorry, but I don't know what that means :-(";
+
+        assertParseError("", unknownCommandError);
+        assertParseError("listing", unknownCommandError);
+        assertParseError("list extra", unknownCommandError);
+        assertParseError("bye extra", unknownCommandError);
+        assertParseError("TODO read book", unknownCommandError);
     }
 
     @Test
