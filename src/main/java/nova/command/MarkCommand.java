@@ -46,16 +46,16 @@ public class MarkCommand extends Command {
         Task task;
         boolean isMarked;
         switch (completionAction) {
-        case MARK:
-            task = tasks.mark(taskNumber);
-            isMarked = true;
-            break;
-        case UNMARK:
-            task = tasks.unmark(taskNumber);
-            isMarked = false;
-            break;
-        default:
-            throw new AssertionError("Unexpected completion action: " + completionAction);
+            case MARK:
+                task = tasks.mark(taskNumber);
+                isMarked = true;
+                break;
+            case UNMARK:
+                task = tasks.unmark(taskNumber);
+                isMarked = false;
+                break;
+            default:
+                throw new AssertionError("Unexpected completion action: " + completionAction);
         }
         ui.showMarkedTask(task, isMarked);
     }

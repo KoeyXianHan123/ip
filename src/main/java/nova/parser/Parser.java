@@ -42,34 +42,34 @@ public class Parser {
 
         String commandWord = getCommandWord(input);
         switch (commandWord) {
-        case "bye":
-            if (input.equals(commandWord)) {
-                return new ExitCommand();
-            }
-            break;
-        case "list":
-            if (input.equals(commandWord)) {
-                return new ListCommand();
-            }
-            break;
-        case "mark":
-            return new MarkCommand(parseTaskNumber(input, commandWord), CompletionAction.MARK);
-        case "unmark":
-            return new MarkCommand(parseTaskNumber(input, commandWord), CompletionAction.UNMARK);
-        case "delete":
-            return new DeleteCommand(parseTaskNumber(input, commandWord));
-        case "find":
-            return parseFind(input);
-        case "todo":
-            return parseTodo(input);
-        case "deadline":
-            return parseDeadline(input);
-        case "event":
-            return parseEvent(input);
-        case "on":
-            return parseDateSearch(input);
-        default:
-            break;
+            case "bye":
+                if (input.equals(commandWord)) {
+                    return new ExitCommand();
+                }
+                break;
+            case "list":
+                if (input.equals(commandWord)) {
+                    return new ListCommand();
+                }
+                break;
+            case "mark":
+                return new MarkCommand(parseTaskNumber(input, commandWord), CompletionAction.MARK);
+            case "unmark":
+                return new MarkCommand(parseTaskNumber(input, commandWord), CompletionAction.UNMARK);
+            case "delete":
+                return new DeleteCommand(parseTaskNumber(input, commandWord));
+            case "find":
+                return parseFind(input);
+            case "todo":
+                return parseTodo(input);
+            case "deadline":
+                return parseDeadline(input);
+            case "event":
+                return parseEvent(input);
+            case "on":
+                return parseDateSearch(input);
+            default:
+                break;
         }
         throw new NovaException("I'm sorry, but I don't know what that means :-(");
     }
