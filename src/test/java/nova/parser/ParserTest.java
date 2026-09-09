@@ -18,6 +18,7 @@ import nova.command.Command;
 import nova.command.DeleteCommand;
 import nova.command.ExitCommand;
 import nova.command.FindCommand;
+import nova.command.HelpCommand;
 import nova.command.ListCommand;
 import nova.command.MarkCommand;
 import nova.command.ShowOnDateCommand;
@@ -39,6 +40,8 @@ class ParserTest {
         assertTrue(exitCommand.isExit());
         assertInstanceOf(ListCommand.class, parser.parse("list"));
         assertFalse(parser.parse("list").isExit());
+        assertInstanceOf(HelpCommand.class, parser.parse("help"));
+        assertFalse(parser.parse("help").isExit());
     }
 
     @Test
@@ -106,6 +109,10 @@ class ParserTest {
         assertParseError("listing", unknownCommandError);
         assertParseError("list extra", unknownCommandError);
         assertParseError("bye extra", unknownCommandError);
+        assertParseError("help extra", unknownCommandError);
+        assertParseError("help ", unknownCommandError);
+        assertParseError(" help", unknownCommandError);
+        assertParseError("Help", unknownCommandError);
         assertParseError("TODO read book", unknownCommandError);
     }
 
