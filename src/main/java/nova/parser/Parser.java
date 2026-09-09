@@ -10,6 +10,7 @@ import nova.command.ExitCommand;
 import nova.command.FindCommand;
 import nova.command.ListCommand;
 import nova.command.MarkCommand;
+import nova.command.MarkCommand.CompletionAction;
 import nova.command.ShowOnDateCommand;
 import nova.exception.NovaException;
 import nova.task.Deadline;
@@ -47,9 +48,9 @@ public class Parser {
             }
             break;
         case "mark":
-            return new MarkCommand(parseTaskNumber(input, commandWord), true);
+            return new MarkCommand(parseTaskNumber(input, commandWord), CompletionAction.MARK);
         case "unmark":
-            return new MarkCommand(parseTaskNumber(input, commandWord), false);
+            return new MarkCommand(parseTaskNumber(input, commandWord), CompletionAction.UNMARK);
         case "delete":
             return new DeleteCommand(parseTaskNumber(input, commandWord));
         case "find":
