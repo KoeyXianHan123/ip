@@ -11,18 +11,26 @@ import nova.ui.Ui;
  * Marks or unmarks a numbered task.
  */
 public class MarkCommand extends Command {
+    /**
+     * Represents a requested change to a task's completion state.
+     */
+    public enum CompletionAction {
+        MARK,
+        UNMARK
+    }
+
     private final int taskNumber;
-    private final boolean shouldMark;
+    private final CompletionAction completionAction;
 
     /**
      * Creates a command that changes a task's completion state.
      *
      * @param taskNumber one-based number of the task to update
-     * @param shouldMark whether the task should be marked as completed
+     * @param completionAction completion-state change to perform
      */
-    public MarkCommand(int taskNumber, boolean shouldMark) {
+    public MarkCommand(int taskNumber, CompletionAction completionAction) {
         this.taskNumber = taskNumber;
-        this.shouldMark = shouldMark;
+        this.completionAction = completionAction;
     }
 
     /**
@@ -35,7 +43,20 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui) throws NovaException, IOException {
-        Task task = shouldMark ? tasks.mark(taskNumber) : tasks.unmark(taskNumber);
-        ui.showMarkedTask(task, shouldMark);
+        Task task;
+        boolean isMarked;
+        switch (completionAction) {
+        case MARK:
+            task = tasks.mark(taskNumber);
+            isMarked = true;
+            break;
+        case UNMARK:
+            task = tasks.unmark(taskNumber);
+            isMarked = false;
+            break;
+        default:
+            throw new AssertionError("Unexpected completion action: " + completionAction);
+        }
+        ui.showMarkedTask(task, isMarked);
     }
 }
