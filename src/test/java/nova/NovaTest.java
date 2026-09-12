@@ -33,7 +33,7 @@ class NovaTest {
 
     @Test
     void startGui_newSession_returnsGreeting() {
-        assertEquals("Hello! I'm Nova.\nWhat can I do for you?", normalizeLineEndings(nova.startGui()));
+        assertEquals("Hello! I'm Nova.\nLet's take it one task at a time.", normalizeLineEndings(nova.startGui()));
     }
 
     @Test
@@ -41,7 +41,8 @@ class NovaTest {
         String addResponse = normalizeLineEndings(nova.getResponse("todo read book"));
         String listResponse = normalizeLineEndings(nova.getResponse("list"));
 
-        assertTrue(addResponse.contains("[T][ ] read book"));
+        assertEquals(" Got it! Added to your list:\n  [T][ ] read book\n"
+                + " Now you have 1 tasks in the list.", addResponse);
         assertEquals(" Here are the tasks in your list:\n 1.[T][ ] read book", listResponse);
         assertTrue(temporaryDirectory.resolve("nova.txt").toFile().isFile());
     }
@@ -53,7 +54,7 @@ class NovaTest {
         assertTrue(errorResponse.contains("I don't know what that means"));
         assertFalse(nova.isExitRequested());
 
-        assertEquals(" Bye. Hope to see you again soon!", nova.getResponse("bye"));
+        assertEquals(" See you soon. Take care!", nova.getResponse("bye"));
         assertTrue(nova.isExitRequested());
     }
 
