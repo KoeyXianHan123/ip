@@ -56,7 +56,7 @@ public class Ui {
     public void showGuiWelcome() {
         showLines(
                 "Hello! I'm Nova.",
-                "What can I do for you?");
+                "Let's take it one task at a time.");
     }
 
     /**
@@ -88,7 +88,7 @@ public class Ui {
      * Displays Nova's farewell.
      */
     public void showGoodbye() {
-        output.println(" Bye. Hope to see you again soon!");
+        output.println(" See you soon. Take care!");
     }
 
     /**
@@ -116,7 +116,7 @@ public class Ui {
      * @param message explanation of the error
      */
     public void showError(String message) {
-        output.println(" OOPS!!! " + message);
+        output.println(" Oops! " + message);
     }
 
     /**
@@ -125,7 +125,7 @@ public class Ui {
      * @param skippedRecordCount number of corrupted records skipped
      */
     public void showSkippedRecords(int skippedRecordCount) {
-        output.println(" OOPS!!! I skipped " + skippedRecordCount
+        output.println(" Oops! I skipped " + skippedRecordCount
                 + " corrupted task record(s) in the data file.");
     }
 
@@ -161,8 +161,8 @@ public class Ui {
      */
     public void showMarkedTask(Task task, boolean isMarked) {
         String message = isMarked
-                ? " Nice! I've marked this task as done:"
-                : " OK, I've marked this task as not done yet:";
+                ? " Nice work! Marked as done:"
+                : " No problem. Marked as not done yet:";
         showLines(message, "  " + task);
     }
 
@@ -174,7 +174,7 @@ public class Ui {
      */
     public void showDeletedTask(Task task, int taskCount) {
         showLines(
-                " Noted. I've removed this task:",
+                " All right. Removed from your list:",
                 "  " + task,
                 " Now you have " + taskCount + " tasks in the list.");
     }
@@ -187,7 +187,7 @@ public class Ui {
      */
     public void showAddedTask(Task task, int taskCount) {
         showLines(
-                " Got it. I've added this task:",
+                " Got it! Added to your list:",
                 "  " + task,
                 " Now you have " + taskCount + " tasks in the list.");
     }

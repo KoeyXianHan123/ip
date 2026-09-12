@@ -36,20 +36,20 @@ bye
 |_| \_|\___/ \_/ \__,_|
 
 Hello! I'm Nova.
-What can I do for you?
+Let's take it one task at a time.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [T][ ] borrow book
  Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [D][ ] do homework (by: Oct 15 2019)
  Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
  Now you have 3 tasks in the list.
 ____________________________________________________________
@@ -60,7 +60,7 @@ ____________________________________________________________
  3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
- Bye. Hope to see you again soon!
+ See you soon. Take care!
 ____________________________________________________________
 ```
 
@@ -93,43 +93,43 @@ bye
 |_| \_|\___/ \_/ \__,_|
 
 Hello! I'm Nova.
-What can I do for you?
+Let's take it one task at a time.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [T][ ] read book
  Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [D][ ] return book (by: Jun 6 2019)
  Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
  Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [T][ ] join sports club
  Now you have 4 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [T][ ] borrow book
  Now you have 5 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Noted. I've removed this task:
+ All right. Removed from your list:
   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
  Now you have 4 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! Please enter a task number, for example: delete 1
+ Oops! Please enter a task number, for example: delete 1
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! Task 9 does not exist in the list.
+ Oops! Task 9 does not exist in the list.
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list:
@@ -139,7 +139,7 @@ ____________________________________________________________
  4.[T][ ] borrow book
 ____________________________________________________________
 ____________________________________________________________
- Bye. Hope to see you again soon!
+ See you soon. Take care!
 ____________________________________________________________
 ```
 
@@ -172,37 +172,37 @@ bye
 |_| \_|\___/ \_/ \__,_|
 
 Hello! I'm Nova.
-What can I do for you?
+Let's take it one task at a time.
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! The description of a todo cannot be empty.
+ Oops! The description of a todo cannot be empty.
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! I'm sorry, but I don't know what that means :-(
+ Oops! I'm sorry, but I don't know what that means :-(
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! A deadline must follow: deadline DESCRIPTION /by yyyy-MM-dd
+ Oops! A deadline must follow: deadline DESCRIPTION /by yyyy-MM-dd
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! The deadline date must be a valid date in yyyy-MM-dd format.
+ Oops! The deadline date must be a valid date in yyyy-MM-dd format.
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! The deadline date must be a valid date in yyyy-MM-dd format.
+ Oops! The deadline date must be a valid date in yyyy-MM-dd format.
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! An event must follow: event DESCRIPTION /from START /to END
+ Oops! An event must follow: event DESCRIPTION /from START /to END
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! Please enter a task number, for example: mark 1
+ Oops! Please enter a task number, for example: mark 1
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! Task 1 does not exist in the list.
+ Oops! Task 1 does not exist in the list.
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list:
 ____________________________________________________________
 ____________________________________________________________
- Bye. Hope to see you again soon!
+ See you soon. Take care!
 ____________________________________________________________
 ```
 
@@ -230,19 +230,19 @@ bye
 |_| \_|\___/ \_/ \__,_|
 
 Hello! I'm Nova.
-What can I do for you?
+Let's take it one task at a time.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [T][ ] write tests
  Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Nice! I've marked this task as done:
+ Nice work! Marked as done:
   [T][X] write tests
 ____________________________________________________________
 ____________________________________________________________
- OK, I've marked this task as not done yet:
+ No problem. Marked as not done yet:
   [T][ ] write tests
 ____________________________________________________________
 ____________________________________________________________
@@ -250,7 +250,7 @@ ____________________________________________________________
  1.[T][ ] write tests
 ____________________________________________________________
 ____________________________________________________________
- Bye. Hope to see you again soon!
+ See you soon. Take care!
 ____________________________________________________________
 ```
 
@@ -290,9 +290,9 @@ bye
 |_| \_|\___/ \_/ \__,_|
 
 Hello! I'm Nova.
-What can I do for you?
+Let's take it one task at a time.
 ____________________________________________________________
- OOPS!!! I skipped 6 corrupted task record(s) in the data file.
+ Oops! I skipped 6 corrupted task record(s) in the data file.
 ____________________________________________________________
  Here are the tasks in your list:
  1.[T][X] read | café
@@ -301,7 +301,7 @@ ____________________________________________________________
  4.[T][ ] legacy task
 ____________________________________________________________
 ____________________________________________________________
- Bye. Hope to see you again soon!
+ See you soon. Take care!
 ____________________________________________________________
 ```
 
@@ -334,25 +334,25 @@ bye
 |_| \_|\___/ \_/ \__,_|
 
 Hello! I'm Nova.
-What can I do for you?
+Let's take it one task at a time.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [D][ ] submit report (by: Oct 15 2019)
  Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [T][ ] buy stationery
  Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [D][ ] return book (by: Oct 15 2019)
  Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [D][ ] renew membership (by: Oct 16 2019)
  Now you have 4 tasks in the list.
 ____________________________________________________________
@@ -365,10 +365,10 @@ ____________________________________________________________
  Here are the deadlines on 2019-10-17:
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! The date must be a valid date in yyyy-MM-dd format.
+ Oops! The date must be a valid date in yyyy-MM-dd format.
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! The date must be a valid date in yyyy-MM-dd format.
+ Oops! The date must be a valid date in yyyy-MM-dd format.
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list:
@@ -378,7 +378,7 @@ ____________________________________________________________
  4.[D][ ] renew membership (by: Oct 16 2019)
 ____________________________________________________________
 ____________________________________________________________
- Bye. Hope to see you again soon!
+ See you soon. Take care!
 ____________________________________________________________
 ```
 
@@ -411,25 +411,25 @@ bye
 |_| \_|\___/ \_/ \__,_|
 
 Hello! I'm Nova.
-What can I do for you?
+Let's take it one task at a time.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [T][ ] read book
  Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [T][ ] write report
  Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [D][ ] return book (by: Jun 6 2019)
  Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [E][ ] book launch (from: 2pm to: 4pm)
  Now you have 4 tasks in the list.
 ____________________________________________________________
@@ -443,7 +443,7 @@ ____________________________________________________________
  Here are the matching tasks in your list:
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! The keyword for a find command cannot be empty.
+ Oops! The keyword for a find command cannot be empty.
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list:
@@ -453,7 +453,7 @@ ____________________________________________________________
  4.[E][ ] book launch (from: 2pm to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
- Bye. Hope to see you again soon!
+ See you soon. Take care!
 ____________________________________________________________
 ```
 
@@ -482,10 +482,10 @@ bye
 |_| \_|\___/ \_/ \__,_|
 
 Hello! I'm Nova.
-What can I do for you?
+Let's take it one task at a time.
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
+ Got it! Added to your list:
   [T][ ] read book
  Now you have 1 tasks in the list.
 ____________________________________________________________
@@ -504,13 +504,13 @@ ____________________________________________________________
  bye
 ____________________________________________________________
 ____________________________________________________________
- OOPS!!! I'm sorry, but I don't know what that means :-(
+ Oops! I'm sorry, but I don't know what that means :-(
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list:
  1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
- Bye. Hope to see you again soon!
+ See you soon. Take care!
 ____________________________________________________________
 ```
