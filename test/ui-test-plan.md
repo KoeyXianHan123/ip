@@ -2,6 +2,16 @@
 
 Run cases in order with Java 25. Each case starts Nova in a fresh process and temporary working directory.
 
+Manual GUI check (A-BetterGui):
+
+- Aim: Verify the 14px GUI font remains readable without clipping at the default window size.
+- Input: Launch the GUI, enter `help` using Enter, then `list` using Send.
+- Expected output: `help` displays the command list shown in TC8; `list` displays the current tasks.
+  Message text, the input field, and Send use the larger font. Long replies wrap inside their bubbles,
+  all lines remain accessible by scrolling, and the input field and Send text are not clipped.
+  User messages remain blue and right-aligned; Nova replies remain gray and left-aligned.
+  This visual check is manual and is not run by the console test runner.
+
 ## TC1: Add and list all task types
 
 Aim: Verify todos, dated deadlines, and events display polymorphically, with deadlines reformatted from yyyy-MM-dd.
