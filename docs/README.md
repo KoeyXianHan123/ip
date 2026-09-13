@@ -106,3 +106,4 @@ If a command is incomplete, a date is invalid, or a task number does not exist, 
 the problem. Correct the command and try again, or enter `help` for the syntax.
 If saving fails, Nova reports the error and leaves the task list unchanged. It also reports
 loading problems and warns when corrupted task records are skipped.
+If Nova cannot load the data file, all commands except `help` and `bye` are disabled for that session to protect the existing file; fix the data file and restart Nova.
