@@ -7,7 +7,18 @@ one task at a time.
 
 ## Getting started
 
-Open Nova, type a command in the box at the bottom, and press **Enter** or click **Send**.
+1. Install **Java 25**. Run `java -version` in a terminal to check your version.
+2. Download `nova.jar` from the Assets section of the
+   [Nova releases page](https://github.com/KoeyXianHan123/ip/releases) and save it in a folder of your choice.
+3. Open a terminal in that folder and run:
+
+   ```text
+   java -jar nova.jar
+   ```
+
+Nova's window should appear. Keep launching it from the same folder so it can find your saved tasks.
+
+Type a command in the box at the bottom, and press **Enter** or click **Send**.
 Scroll up to revisit earlier replies.
 
 Try `todo borrow book`, then `list` to see your first task. Enter `help` whenever you need
