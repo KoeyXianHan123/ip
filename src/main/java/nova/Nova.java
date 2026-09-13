@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import nova.command.Command;
+import nova.command.ExitCommand;
+import nova.command.HelpCommand;
 import nova.exception.NovaException;
 import nova.parser.Parser;
 import nova.storage.Storage;
@@ -26,6 +28,8 @@ public class Nova {
     private final Parser parser;
     private TaskList tasks;
     private boolean isExitRequested;
+    // Keeps the original file protected for the entire session after a failed load.
+    private boolean hasLoadFailed;
 
     /**
      * Creates Nova using its default data file and console collaborators.
@@ -122,6 +126,7 @@ public class Nova {
                 outputUi.showSkippedRecords(storage.getSkippedRecordCount());
             }
         } catch (IOException exception) {
+            hasLoadFailed = true;
             outputUi.showError("I could not load your tasks from the data file.");
             tasks = new TaskList(new ArrayList<>(), storage);
         }
@@ -136,6 +141,10 @@ public class Nova {
         isExitRequested = false;
         try {
             Command command = parser.parse(input);
+            if (hasLoadFailed && !(command instanceof HelpCommand) && !(command instanceof ExitCommand)) {
+                throw new NovaException("I could not load your tasks. Please fix the data file and restart Nova. "
+                        + "Only help and bye are available this session.");
+            }
             command.execute(tasks, outputUi);
             isExitRequested = command.isExit();
         } catch (NovaException exception) {

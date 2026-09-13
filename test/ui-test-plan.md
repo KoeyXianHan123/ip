@@ -12,6 +12,58 @@ Manual GUI check (A-BetterGui):
   User messages remain blue and right-aligned; Nova replies remain gray and left-aligned.
   This visual check is manual and is not run by the console test runner.
 
+### Failed-load GUI regression (also covered by NovaTest)
+
+Aim: Verify a failed load cannot overwrite existing data or display misleading empty results,
+and leaves only help and exit available.
+Use a disposable working folder, not your real task data. Before launching Nova, create
+`data/nova.txt` containing `T | 0 | important existing task` followed by a newline and the
+invalid UTF-8 byte `FF`. Keep a byte-for-byte copy for comparison. This binary fixture is
+covered by JUnit; the console Markdown runner below only accepts text fixtures.
+
+Input: Launch Nova. Expected greeting:
+
+```text
+Hello! I'm Nova.
+Let's take it one task at a time.
+ Oops! I could not load your tasks from the data file.
+```
+
+Input: Enter each command separately: `todo new task`, `deadline report /by 2026-09-30`,
+`event meeting /from 2pm /to 4pm`, `mark 1`, `unmark 1`, `delete 1`, `todo another task`,
+`list`, `find task`, then `on 2026-09-30`.
+Exact expected Nova response to every command:
+
+```text
+ Oops! I could not load your tasks. Please fix the data file and restart Nova. Only help and bye are available this session.
+```
+
+Input: `help`. Exact expected Nova response:
+
+```text
+ Here are Nova's commands:
+ list
+ todo DESCRIPTION
+ deadline DESCRIPTION /by yyyy-MM-dd
+ event DESCRIPTION /from START /to END
+ mark TASK_NUMBER
+ unmark TASK_NUMBER
+ delete TASK_NUMBER
+ find KEYWORD
+ on yyyy-MM-dd
+ help
+ bye
+```
+
+Input: `bye`. Exact expected Nova response:
+
+```text
+ See you soon. Take care!
+```
+
+Expected state: No attempted change adds or removes a task. Input remains usable until `bye`,
+which disables the GUI input and Send button. The original data file remains byte-for-byte unchanged.
+
 ## TC1: Add and list all task types
 
 Aim: Verify todos, dated deadlines, and events display polymorphically, with deadlines reformatted from yyyy-MM-dd.
